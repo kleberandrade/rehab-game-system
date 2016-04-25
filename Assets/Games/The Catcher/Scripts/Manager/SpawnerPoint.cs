@@ -3,8 +3,8 @@ using System.Collections;
 
 public class SpawnerPoint : MonoBehaviour
 {
-    [SerializeField] private float m_TimeToSpawning = 1.0f;
-    [SerializeField] private Transform m_Target;
+    public float m_TimeToSpawning = 0.5f;
+    public Transform m_Target;
 
     private ObjectPooler m_ObjectPooler;
     private ParticleSystem m_Particles;
@@ -26,16 +26,16 @@ public class SpawnerPoint : MonoBehaviour
     private void Start()
     {
         m_PlayerMovement = FindObjectOfType<PlayerMovement>();
-        m_PlayerMovement.SetTargetPosition(Vector3.zero);
-
+        m_PlayerMovement.LookAt(Vector3.zero);
         m_Particles.playOnAwake = false;
         m_Particles.loop = false;
+
         UpdatePosition();
     }
 
     public void Spawn()
     {
-        if (m_NumberOfObjects == 0)
+        if (!HasObjectToSpawner())
             return;
 
         StartCoroutine(Spawning());
@@ -43,9 +43,37 @@ public class SpawnerPoint : MonoBehaviour
         m_NumberOfObjects--;
     }
 
+    public void Spawn(Task task)
+    {
+        if (!HasObjectToSpawner())
+            return;
+
+        StartCoroutine(Spawning(task));
+
+        m_NumberOfObjects--;
+    }
+
+    private IEnumerator Spawning(Task task)
+    {
+        m_PlayerMovement.LookAt(Vector3.zero);
+        UpdatePosition();
+        m_Particles.Play();
+        m_WindWorld.Fan();
+
+        yield return new WaitForSeconds(m_TimeToSpawning);
+
+        // Define a distancia e velocidade da tarefa
+        GameObject go = m_ObjectPooler.NextObject();
+        go.transform.position = m_Transform.position;
+        go.SetActive(true);
+
+        m_Score.Next();
+        m_PlayerMovement.LookAt(m_Transform.position);
+    }
+
     private IEnumerator Spawning()
     {
-        m_PlayerMovement.SetTargetPosition(Vector3.zero);
+        m_PlayerMovement.LookAt(Vector3.zero);
         UpdatePosition();
         m_Particles.Play();
         m_WindWorld.Fan();
@@ -57,7 +85,7 @@ public class SpawnerPoint : MonoBehaviour
         go.SetActive(true);
 
         m_Score.Next();
-        m_PlayerMovement.SetTargetPosition(m_Transform.position);
+        m_PlayerMovement.LookAt(m_Transform.position);
     }
 
     private void UpdatePosition()
@@ -76,6 +104,6 @@ public class SpawnerPoint : MonoBehaviour
 
     public bool HasObjectToSpawner()
     {
-        return m_NumberOfObjects == 0;
+        return m_NumberOfObjects > 0;
     }
 }

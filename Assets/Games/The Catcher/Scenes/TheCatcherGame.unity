@@ -283,6 +283,7 @@ MonoBehaviour:
   m_EndDelay: 3
   m_Counter: {fileID: 1259257347}
   m_Spawner: {fileID: 252252498}
+  m_DynamicDifficulty: {fileID: 24889608}
   m_Score: {fileID: 526013620}
 --- !u!114 &24889608
 MonoBehaviour:
@@ -295,6 +296,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81503b1427c148b44a37504a3946190d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_Kd: 0.3483
+  m_Ks: 0.4679
+  m_Ke: 0.6692
+  m_Kc: 0.5319
+  m_Md: 0.05
+  m_Ms: 0.05
+  m_NumberOfTask: 5
 --- !u!4 &112353190 stripped
 Transform:
   m_PrefabParentObject: {fileID: 413448, guid: 7afc4dc6680b8c749b1137fdcb28fd90, type: 2}

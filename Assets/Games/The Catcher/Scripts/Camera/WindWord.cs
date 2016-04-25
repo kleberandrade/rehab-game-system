@@ -4,11 +4,11 @@ using System.Collections.Generic;
 
 public class WindWord : MonoBehaviour
 {
-    [SerializeField] private float m_NormalPeriodOscillator = 2.0f;
-    [SerializeField] private float m_NormalAmplitudeOscillator = 1.0f;
-    [SerializeField] private float m_PeriodOscillator = 35.0f;
-    [SerializeField] private float m_AmplitudeOscillator = 3.0f;
-    [SerializeField] private List<Oscillator> m_Oscillators;
+    public float m_NormalPeriodOscillator = 2.0f;
+    public float m_NormalAmplitudeOscillator = 1.0f;
+    public float m_PeriodOscillator = 35.0f;
+    public float m_AmplitudeOscillator = 3.0f;
+    public List<Oscillator> m_Oscillators;
 
     private float m_TimeToOscilattion = 1.0f;
     private AudioSource m_AudioSource;

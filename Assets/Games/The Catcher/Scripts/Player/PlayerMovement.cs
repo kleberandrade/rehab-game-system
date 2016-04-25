@@ -85,7 +85,7 @@ public class PlayerMovement : MonoBehaviour
         m_Animator.SetBool("IsWalking", m_IsWalking);
     }
 
-    public void SetTargetPosition(Vector3 position)
+    public void LookAt(Vector3 position)
     {
         m_TargetPosition = position;
     }

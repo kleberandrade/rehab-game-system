@@ -3,12 +3,13 @@ using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private int m_NumberOfGoals = 300;
-    [SerializeField] private float m_StartDelay = 3f;
-    [SerializeField] private float m_EndDelay = 3f;
-    [SerializeField] private StartCounter m_Counter;
-    [SerializeField] private SpawnerPoint m_Spawner;
-    [SerializeField] private Score m_Score;
+    public int m_NumberOfGoals = 300;
+    public float m_StartDelay = 3f;
+    public float m_EndDelay = 3f;
+    public StartCounter m_Counter;
+    public SpawnerPoint m_Spawner;
+    public DynamicDifficulty m_TaskManager;
+    public Score m_Score;
 
     private WaitForSeconds m_StartWait;
     private WaitForSeconds m_EndWait;
@@ -19,14 +20,12 @@ public class GameManager : MonoBehaviour
     {
         m_StartWait = new WaitForSeconds(m_StartDelay);
         m_EndWait = new WaitForSeconds(m_EndDelay);
-
         StartCoroutine(GameLoop());
     }
 
     private IEnumerator GameLoop()
     {
         yield return StartCoroutine(RoundStarting());
-        //yield return StartCoroutine(RoundCalibrating());
         yield return StartCoroutine(RoundPlaying());
         yield return StartCoroutine(RoundEnding());
     }
@@ -39,19 +38,9 @@ public class GameManager : MonoBehaviour
         yield return m_StartWait;
     }
 
-    private IEnumerator RoundCalibrating()
-    {
-        Debug.Log("Calibrando robô...");
-        //while ()
-        //{
-            yield return null;
-        //}
-    }
-
     private IEnumerator RoundPlaying()
     {
-        m_Spawner.Spawn();
-
+        m_Spawner.Spawn(m_TaskManager.NextTask());
         while (m_Spawner.HasObjectToSpawner())
         {
             yield return null;
