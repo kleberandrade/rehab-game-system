@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using UnityEngine;
 
 public class Helper
 {
@@ -19,7 +22,6 @@ public class Helper
 
     public static float ViewportToWord(float position, float min, float max, float depth)
     {
-        position = InverseNormalization(position, min, max);
         return Camera.main.ViewportToWorldPoint(new Vector3(position, 0, depth)).x;
     }
 
@@ -37,5 +39,50 @@ public class Helper
     public static float WorldToViewport(Vector3 position, float min, float max, float depth)
     {
         return Normalization(WorldToViewport(position, depth), min, max);
+    }
+
+    public static bool SaveJsonToFileText(string data, string filename, bool append)
+    {
+        try
+        {
+            using (StreamWriter writer = new StreamWriter(Application.dataPath + "/" + filename, append))
+            {
+                writer.WriteLine(data);
+            }
+
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    public static List<T> LoadJsonToFileText<T>(string filename, out int count)
+    {
+        List<T> list = new List<T>();
+        count = 0;
+        try
+        {
+            if (File.Exists(Application.dataPath + filename))
+            {
+                using (StreamReader reader = new StreamReader(Application.dataPath + "/" + filename))
+                {
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        T temp = JsonUtility.FromJson<T>(line);
+                        list.Add(temp);
+                        count++;
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError(ex.Message);
+        }
+
+        return list;
     }
 }

@@ -3,8 +3,8 @@
 public class PlayerMovement : MonoBehaviour
 {
 
-    [SerializeField] private float m_PitchRange = 0.1f;
-    [SerializeField] private float m_DistanceToTurn = 2.0f;
+    public float m_PitchRange = 0.1f;
+    public float m_DistanceToTurn = 2.0f;
 
     private AudioSource m_MovementAudio;
     private float m_OriginalPitch;
@@ -27,7 +27,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Start()
     {
-        m_PitchRange = m_MovementAudio.pitch;
+        m_OriginalPitch = m_MovementAudio.pitch;
         m_Movement = m_Transform.position;
         m_LastMovement = m_Movement;
     }
@@ -94,6 +94,9 @@ public class PlayerMovement : MonoBehaviour
     {
         if (m_IsWalking)
         {
+            if (m_MovementAudio.isPlaying)
+                return;
+
             m_MovementAudio.pitch = Random.Range(m_OriginalPitch - m_PitchRange, m_OriginalPitch + m_PitchRange);
             m_MovementAudio.Play();
         }
