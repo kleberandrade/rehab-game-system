@@ -14,8 +14,6 @@ public class GameManager : MonoBehaviour
     private WaitForSeconds m_StartWait;
     private WaitForSeconds m_EndWait;
 
-    private int m_GoalNumber = 0;
-
     private void Start()
     {
         m_StartWait = new WaitForSeconds(m_StartDelay);
@@ -40,7 +38,8 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator RoundPlaying()
     {
-        m_Spawner.Spawn(m_TaskManager.NextTask());
+        m_Spawner.SetTaskManager(m_TaskManager);
+        m_Spawner.Spawn();
         while (m_Spawner.HasObjectToSpawner())
         {
             yield return null;
@@ -56,6 +55,11 @@ public class GameManager : MonoBehaviour
     }
 
     private void DisablePlayer()
+    {
+
+    }
+
+    private void SaveSession()
     {
 
     }

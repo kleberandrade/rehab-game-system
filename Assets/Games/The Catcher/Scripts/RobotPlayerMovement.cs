@@ -8,37 +8,21 @@ public class RobotPlayerMovement : MonoBehaviour
     private Transform m_Transform;
     private PlayerMovement m_PlayerMovement;
 
-    [SerializeField] private float m_MinRobotAngle = -90.0f;
-    [SerializeField] private float m_MaxRobotAngle = 90.0f;
-    [SerializeField] private float m_ScreenLeft = 0.1f;
-    [SerializeField] private float m_ScreenRight = 0.9f;
-    [SerializeField] private bool m_Debug = false;
-
-    private double m_RobotAngle = 0.0f;
-
-    public double RobotAngle
-    {
-        get { return m_RobotAngle; }
-        set { m_RobotAngle = value; }
-    }
-
-    public bool Debug
-    {
-        get { return m_Debug; }
-        set { m_Debug = value; }
-    }
-
-    public float LeftAngle
-    {
-        get { return m_MinRobotAngle; }
-        set { m_MinRobotAngle = value; }
-    }
-
-    public float RightAngle
-    {
-        get { return m_MaxRobotAngle; }
-        set { m_MaxRobotAngle = value; }
-    }
+    [Range(0.0f, -90.0f)]
+    public float m_MinRobotAngle = -90.0f;
+    [Range(0.0f, 90.0f)]
+    public float m_MaxRobotAngle = 90.0f;
+    [Range(0.0f, -90.0f)]
+    public float m_MinPlayerAngle = 0.0f;
+    [Range(0.0f, 90.0f)]
+    public float m_MaxPlayerAngle = 1.0f;
+    [Range(0.0f, 1.0f)]
+    public float m_ScreenLeft = 0.1f;
+    [Range(0.0f, 1.0f)]
+    public float m_ScreenRight = 0.9f;
+    public bool m_Debug = false;
+    [Range(-90.0f, 90.0f)]
+    public double m_RobotAngle = 0.0f;
 
     private void Start ()
     {
@@ -55,7 +39,14 @@ public class RobotPlayerMovement : MonoBehaviour
 
 	private void HorizontalMovement ()
     {
-        float horizontal = RobotAngleToHorizontalWorldPosition(m_RobotAngle, m_MinRobotAngle, m_MaxRobotAngle);
+        if (m_RobotAngle < m_MinPlayerAngle)
+            m_MinPlayerAngle = (float)m_RobotAngle;
+
+        if (m_RobotAngle > m_MaxPlayerAngle)
+            m_MaxPlayerAngle = (float)m_RobotAngle;
+
+        float horizontal = RobotAngleToHorizontalWorldPosition(m_RobotAngle, m_MinPlayerAngle, m_MaxPlayerAngle);
+
         m_PlayerMovement.HorizontalMovement(horizontal);
 	}
 

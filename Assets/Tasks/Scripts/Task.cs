@@ -1,6 +1,7 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 
-public class Task
+public class Task : ICloneable
 {
     public float Distance { get; set; }
     public float Speed { get; set; }
@@ -20,12 +21,11 @@ public class Task
 
     public override string ToString()
     {
-        StringBuilder builder = new StringBuilder();
-        builder.Append(" | ");
-        builder.Append(Distance);
-        builder.Append(" | ");
-        builder.Append(Speed);
-        builder.Append(" | ");
-        return builder.ToString();
+        return string.Format(" | {0:0.00000} | {1:0.00000} | ", Distance, Speed);
+    }
+
+    public object Clone()
+    {
+        return this.MemberwiseClone();
     }
 }
