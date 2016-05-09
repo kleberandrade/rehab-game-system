@@ -42,8 +42,7 @@ public class RobotPlayerMovement : MonoBehaviour
             m_MaxPlayerAngle = (float)m_RobotAngle;
 
         float horizontal = Helper.Normalization((float)m_RobotAngle, m_MinPlayerAngle, m_MaxPlayerAngle);
-        horizontal = Helper.InverseNormalization(horizontal, m_ScreenLeft, m_ScreenRight);
-        horizontal = Helper.ViewportToWord(horizontal, m_MinPlayerAngle, m_MaxPlayerAngle, m_PlayerDepth);
+        horizontal = Helper.ViewportToWord(horizontal, m_ScreenLeft, m_ScreenRight, m_PlayerDepth);
 
         m_PlayerMovement.HorizontalMovement(horizontal);
 	}

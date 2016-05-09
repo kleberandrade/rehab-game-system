@@ -4,8 +4,8 @@ using UnityEngine;
 [Serializable]
 public class Metric : IJsonData<Metric>
 {
-	public int Id { get; set; }
-	public string Name { get; set; }
+    public int Id;
+    public string Name;
 
     public Metric()
     {

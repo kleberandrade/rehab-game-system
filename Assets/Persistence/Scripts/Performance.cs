@@ -4,7 +4,6 @@ using UnityEngine;
 [Serializable]
 public class Performance : IJsonData<Performance>
 {
-    public int SessionId;
     public string Timestamp;
     public Metric Metric;
     public double Value;
@@ -14,9 +13,15 @@ public class Performance : IJsonData<Performance>
 
     }
 
-    public Performance(int sessionId, string timestamp, Metric metric, double value)
+    public Performance(Metric metric, double value)
     {
-        this.SessionId = sessionId;
+        this.Timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+        this.Metric = metric;
+        this.Value = value;
+    }
+
+    public Performance(string timestamp, Metric metric, double value)
+    {
         this.Timestamp = timestamp;
         this.Metric = metric;
         this.Value = value;

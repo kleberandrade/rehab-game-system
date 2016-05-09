@@ -2,9 +2,9 @@
 
 public class Device : IJsonData<Device>
 {
-	public int Id  { get; set; }
-	public string Name { get; set; }
-	public string Description { get; set; }
+    public int Id;
+    public string Name;
+    public string Description;
 
     public Device()
     {

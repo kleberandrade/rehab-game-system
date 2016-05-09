@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
@@ -10,6 +11,7 @@ public class Session : IJsonData<Session>
     public User Therapist;
     public Game Game;
     public Device Device;
+    public List<Performance> Performances;
 
     public Session()
     {
@@ -18,6 +20,7 @@ public class Session : IJsonData<Session>
         this.Therapist = new User();
         this.Game = new Game();
         this.Device = new Device();
+        this.Performances = new List<Performance>();
     }
 
     public Session(int id, string timestamp, User patient, User therapist, Game game, Device device)
@@ -28,6 +31,7 @@ public class Session : IJsonData<Session>
         this.Therapist = therapist;
         this.Game = game;
         this.Device = device;
+        this.Performances = new List<Performance>();
     }
 
     public static Session CreateFromJSON(string jsonString)

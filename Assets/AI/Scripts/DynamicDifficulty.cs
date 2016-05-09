@@ -19,6 +19,7 @@ public class DynamicDifficulty : MonoBehaviour
     public float m_Ms = 0.1f;
     // Número de tarefas
     public int m_NumberOfTask = 5;
+    public int m_GainToNumberOfTask = 4;
 
     private Task[] m_Tasks;
     private int m_IndexOfTask = 0;
@@ -36,9 +37,9 @@ public class DynamicDifficulty : MonoBehaviour
     public void InitializeRandomTasks()
     {
         m_IndexOfTask = 0;
-        m_Tasks = new Task[m_NumberOfTask];
+        m_Tasks = new Task[m_NumberOfTask * m_GainToNumberOfTask];
 
-        for (int i = 0; i < m_NumberOfTask; i++)
+        for (int i = 0; i < m_Tasks.Length; i++)
             m_Tasks[i] = new Task(Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f));
 
         Debug.Log("GA: Initialize random population...");
@@ -88,6 +89,7 @@ public class DynamicDifficulty : MonoBehaviour
 
     public void GeneticOperator(Task selectedTasks)
     {
+        m_Tasks = new Task[m_NumberOfTask];
         m_Tasks[0] = selectedTasks;
 
         // Crossover e Mutação
