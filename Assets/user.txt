@@ -1,12 +1,4 @@
-{"Id":1,"Name":"Kleber Andrade","Username":"kleberandrade","Email":"pdjkleber@gmail.com","Password":"123","Type":"Administrador","TherapistId":0}
-{"Id":0,"Name":"Claudia","Username":"claudia","Email":"claudia.trevisan@gmail.com","Password":"claudia","Type":"Patient","TherapistId":1}
-{"Id":0,"Name":"Glauco","Username":"claudia","Email":"claudia.trevisan@gmail.com","Password":"claudia","Type":"Patient","TherapistId":1}
-{"Id":0,"Name":"Caio","Username":"claudia","Email":"claudia.trevisan@gmail.com","Password":"claudia","Type":"Patient","TherapistId":1}
-{"Id":0,"Name":"Guilherme","Username":"claudia","Email":"claudia.trevisan@gmail.com","Password":"claudia","Type":"Patient","TherapistId":1}
-{"Id":0,"Name":"Gabriela","Username":"claudia","Email":"claudia.trevisan@gmail.com","Password":"claudia","Type":"Patient","TherapistId":1}
-{"Id":0,"Name":"Leonardo","Username":"leonardo","Email":"leo@gmail.com","Password":"leonardo","Type":"Patient","TherapistId":1}
-{"Id":0,"Name":"Willian","Username":"willian","Email":"willian@gmail.com","Password":"willian","Type":"Patient","TherapistId":1}
-{"Id":0,"Name":"Willian","Username":"willian","Email":"willian@gmail.com","Password":"willian","Type":"Patient","TherapistId":1}
-{"Id":0,"Name":"Livia","Username":"livia","Email":"livia@gmail.com","Password":"livia","Type":"Patient","TherapistId":1}
-{"Id":0,"Name":"Bruna","Username":"bruna","Email":"bruna@gmail.com","Password":"bruna","Type":"Patient","TherapistId":1}
-{"Id":0,"Name":"Marcelo","Username":"marcelo","Email":"marcelo","Password":"marcelo","Type":"Patient","TherapistId":1}
+{"Name":"Kleber Andrade","Username":"kleber","Password":"123","TherapistName":""}
+{"Name":"Claudia Trevisan","Username":"claudia","Password":"123","TherapistName":"kleber"}
+{"Name":"Glauco Caurin","Username":"glauco","Password":"123","TherapistName":"kleber"}
+{"Name":"Caio Moretti","Username":"caio","Password":"123","TherapistName":"kleber"}

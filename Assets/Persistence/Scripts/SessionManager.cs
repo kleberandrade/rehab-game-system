@@ -10,7 +10,6 @@ public class SessionManager : Singleton<SessionManager>
     #region [ Variables ]
     private List<User> m_Patients = new List<User>();
     private Session m_Session = new Session();
-    private List<Performance> m_Perfomances = new List<Performance>();
     private bool m_IsHoming = false;
     #endregion
 
@@ -67,9 +66,9 @@ public class SessionManager : Singleton<SessionManager>
     }
     #endregion
 
-    public int GetTherapistId()
+    public string GetTherapistName()
     {
-        return m_Session.Therapist.Id;
+        return m_Session.Therapist.Username;
     }
 
     public void AddPatients(List<User> patients)
@@ -103,28 +102,31 @@ public class SessionManager : Singleton<SessionManager>
         get { return m_IsHoming; }
     }
 
-    public void NewSession(Game game, Device device)
+    public void SetGame(Game game)
     {
-        int id = 1;
-
-        if (File.Exists(Application.dataPath + "/session.txt"))
-        {
-            using (StreamReader reader = new StreamReader(Application.dataPath + "/session.txt"))
-            {
-                while (reader.ReadLine() != null)
-                    id++;
-            }
-        }
-
-        m_Session.Id = id;
         m_Session.Game = game;
-        m_Session.Device = device;
-        m_Session.Timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+    }
 
-        using (StreamWriter writer = new StreamWriter(Application.dataPath + "/session.txt", true))
-        {
+    public void SetDevice(Device device)
+    {
+        m_Session.Device = device;
+    }
+
+    public void AddPerformance(string metric, double value)
+    {
+        m_Session.Performances.Add(new Performance(metric, value));
+    }
+
+    public void NewPerformance()
+    {
+        m_Session.Performances = new List<Performance>();
+    }
+
+    public void SaveSession()
+    {
+        string filename = string.Format("{0}/session_{1}.txt", Application.dataPath, m_Session.Timestamp);
+        using (StreamWriter writer = new StreamWriter(filename, true))
             writer.WriteLine(m_Session.SaveToString());
-        }
     }
 }
 

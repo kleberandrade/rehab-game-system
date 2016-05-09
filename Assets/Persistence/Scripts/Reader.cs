@@ -8,9 +8,6 @@ public class Reader : MonoBehaviour
 
     private void Start()
     {
-
-
-
         using (StreamReader reader = new StreamReader(Application.dataPath + "/user.txt"))
         {
             string line;

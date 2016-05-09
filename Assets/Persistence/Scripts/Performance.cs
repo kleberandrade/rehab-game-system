@@ -5,22 +5,17 @@ using UnityEngine;
 public class Performance : IJsonData<Performance>
 {
     public string Timestamp;
-    public Metric Metric;
+    public string Metric;
     public double Value;
 
-    public Performance()
-    {
-
-    }
-
-    public Performance(Metric metric, double value)
+    public Performance(string metric, double value)
     {
         this.Timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         this.Metric = metric;
         this.Value = value;
     }
 
-    public Performance(string timestamp, Metric metric, double value)
+    public Performance(string timestamp, string metric, double value)
     {
         this.Timestamp = timestamp;
         this.Metric = metric;

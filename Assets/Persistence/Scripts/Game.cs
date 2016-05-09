@@ -4,21 +4,11 @@ using UnityEngine;
 [Serializable]
 public class Game : IJsonData<Game>
 {
-    public int Id;
     public string Name;
-    public string Description;
 
-    public Game()
+    public Game(string name)
     {
-        this.Name = string.Empty;
-        this.Description = string.Empty;
-    }
-
-    public Game(int id, string name, string description)
-    {
-        this.Id = id;
         this.Name = name;
-        this.Description = description;
     }
 
     public static Game CreateFromJSON(string jsonString)

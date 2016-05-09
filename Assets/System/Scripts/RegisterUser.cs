@@ -78,13 +78,10 @@ public class RegisterUser : MonoBehaviour
             return;
         }
 
-        User patient = new User();
-        patient.Name = m_NameInputValue.text;
-        patient.Email = m_EmailInputValue.text;
-        patient.Password = m_PasswordInputValue.text;
-        patient.Username = patient.Name.Trim().ToLower();
-        patient.Type = "Patient";        
-        patient.TherapistId = SessionManager.Instance.GetTherapistId();
+        User patient = new User(m_NameInputValue.text,
+            m_EmailInputValue.text,
+            m_PasswordInputValue.text,
+            SessionManager.Instance.GetTherapistName());
 
         if (SessionManager.Instance.SaveNewUser(patient.SaveToString()))
         {

@@ -36,7 +36,9 @@ public class SelectGame : MonoBehaviour
         }
         else
         {
-            SessionManager.Instance.NewSession(new Game(1, "The Cathcer", string.Empty), new Device(1, "MORE-W", string.Empty));
+            SessionManager.Instance.SetGame(new Game("The Cathcer"));
+            SessionManager.Instance.SetDevice(new Device("MORE-W"));
+            SessionManager.Instance.NewPerformance();
             SceneManager.LoadScene(m_SceneName);
         }
     }

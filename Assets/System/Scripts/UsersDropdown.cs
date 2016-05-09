@@ -24,7 +24,7 @@ public class UsersDropdown : MonoBehaviour
             {
                 User user = User.CreateFromJSON(line);
                 SessionManager.Instance.AddPatient(user);
-                if (SessionManager.Instance.GetTherapistId() == user.TherapistId)
+                if (SessionManager.Instance.GetTherapistName().Equals(user.TherapistName))
                     patients.Add(user);
             }
         }
