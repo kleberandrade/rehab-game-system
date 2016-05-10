@@ -1,9 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections;
-using UnityEngine.UI;
 using UnityEngine.Events;
-using System;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class SelectGame : MonoBehaviour
 {

@@ -31,12 +31,6 @@ public class Gameover : MonoBehaviour
         StartCoroutine(Fade(true, m_CanvasGroup, delay));
 	}
 
-    private void Close()
-    {
-        m_AudioSource.Play();
-        SceneManager.LoadScene("Hub");
-    }
-
     public IEnumerator Fade(bool fadeIn, CanvasGroup canvasGroup, float delay)
     {
         yield return new WaitForSeconds(delay);
@@ -60,5 +54,12 @@ public class Gameover : MonoBehaviour
         m_IsFading = false;
 
         m_IsFading = false;
+    }
+
+    public void Close()
+    {
+        //m_AudioSource.Play();
+        SessionManager.Instance.SaveSession();
+        SceneManager.LoadScene("Hub");
     }
 }

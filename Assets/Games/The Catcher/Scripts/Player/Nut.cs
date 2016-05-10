@@ -70,6 +70,7 @@ public class Nut : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Ground"))
         {
+            m_Spawner.TargetFail();
             m_Transform.rotation = m_OriginalRotate;
             m_AudioSource.clip = m_CollidedGroundAudioClip;
             m_AudioSource.Play();
@@ -77,7 +78,6 @@ public class Nut : MonoBehaviour
             m_Collider.enabled = false;
             m_Rigidbody.constraints = RigidbodyConstraints.FreezeAll;
             m_Animator.SetBool("InGround", true);
-            //m_CameraShake.Shake();
             StartCoroutine(Destroy());
         }
     }
@@ -93,6 +93,7 @@ public class Nut : MonoBehaviour
 
     public void Captured()
     {
+        m_Spawner.TargetCaptured();
         m_Transform.rotation = m_OriginalRotate;
         m_IsFalling = false;
         m_Collider.enabled = false;

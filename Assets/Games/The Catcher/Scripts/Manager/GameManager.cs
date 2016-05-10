@@ -9,7 +9,9 @@ public class GameManager : MonoBehaviour
     public StartCounter m_Counter;
     public SpawnerPoint m_Spawner;
     public DynamicDifficulty m_TaskManager;
+    public Transform m_PlayerTransform;
     public Score m_Score;
+    public Gameover m_Gameover;
 
     private WaitForSeconds m_StartWait;
     private WaitForSeconds m_EndWait;
@@ -46,16 +48,10 @@ public class GameManager : MonoBehaviour
         }
     }
 
-
     private IEnumerator RoundEnding()
     {
         Debug.Log("Terminando o robô...");
-        DisablePlayer();
+        m_Gameover.Show(2.0f);
         yield return m_EndWait;
-    }
-
-    private void DisablePlayer()
-    {
-
     }
 }

@@ -17,8 +17,14 @@ public class SpawnerPoint : MonoBehaviour
     private WindWord m_WindWorld;
     private PlayerMovement m_PlayerMovement;
     private DynamicDifficulty m_TaskManager;
-
     private List<Task> m_TasksToCalibration = new List<Task>();
+
+    private Vector3 m_StartPlayerPosition;
+    private Vector3 m_LastPlayerPosition;
+    private Vector3 m_FinalTargetPosition;
+    private float m_ElapsedTime = 0.0f;
+    private float m_TotalTime = 0.0f;
+    private bool m_IsPlaying = false;
 
     public void SetTaskManager(DynamicDifficulty taskManager)
     {
@@ -53,6 +59,8 @@ public class SpawnerPoint : MonoBehaviour
 
     public void Spawn()
     {
+        m_IsPlaying = false;
+
         if (!HasObjectToSpawner())
             return;
 
@@ -103,11 +111,21 @@ public class SpawnerPoint : MonoBehaviour
         m_Particles.Play();
         m_WindWorld.Fan();
 
+        m_ElapsedTime = 0.0f;
+        m_TotalTime = 0.0f;
+        m_IsPlaying = true;
         yield return new WaitForSeconds(m_TimeToSpawning);
 
         go.SetActive(true);
         m_Score.Next();
         m_PlayerMovement.LookAt(m_Transform.position);
+
+        // Guarda a posição inicial do jogador
+        m_StartPlayerPosition = m_PlayerMovement.transform.position;
+        // Guarda a posição final do alvo
+        m_FinalTargetPosition = m_Transform.position;
+        m_FinalTargetPosition.z = m_StartPlayerPosition.z;
+        m_FinalTargetPosition.y = m_StartPlayerPosition.y;
     }
 
     private IEnumerator Spawning()
@@ -142,6 +160,30 @@ public class SpawnerPoint : MonoBehaviour
 
     public bool HasObjectToSpawner()
     {
-        return m_NumberOfObjects > 0;
+        return m_NumberOfObjects >= 0;
+    }
+
+    public void Update()
+    {
+        if (Vector3.Distance(m_StartPlayerPosition, m_FinalTargetPosition) > 0.1f)
+        {
+            if (Vector3.Distance(m_StartPlayerPosition, m_LastPlayerPosition) > 0.1f)
+            {
+                m_ElapsedTime += Time.deltaTime;
+            }
+        }
+
+        m_TotalTime += Time.deltaTime;
+        m_LastPlayerPosition = m_PlayerMovement.transform.position;
+    }
+
+    public void TargetCaptured()
+    {
+        m_TaskManager.Evaluation(0.0f, m_ElapsedTime/m_TotalTime);
+    }
+
+    public void TargetFail()
+    {
+        m_TaskManager.Evaluation(Mathf.Abs(m_PlayerMovement.transform.position.x - m_FinalTargetPosition.x), 0.0f);
     }
 }

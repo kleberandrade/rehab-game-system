@@ -36,7 +36,7 @@ public class DynamicDifficulty : MonoBehaviour
 
     public void InitializeRandomTasks()
     {
-        m_IndexOfTask = 0;
+        m_IndexOfTask = -1;
         m_Tasks = new Task[m_NumberOfTask * m_GainToNumberOfTask];
 
         for (int i = 0; i < m_Tasks.Length; i++)
@@ -47,18 +47,17 @@ public class DynamicDifficulty : MonoBehaviour
 
     public Task NextTask()
     {
-        if (m_IndexOfTask < m_Tasks.Length)
+        if (m_IndexOfTask < m_Tasks.Length - 1)
         {
+            m_IndexOfTask++;
             Task task = m_Tasks[m_IndexOfTask];
             Debug.Log(string.Format("GA: Chromosome({0:00}): {1}", m_IndexOfTask + 1, task.ToString()));
-            m_IndexOfTask++;
-
             return task;
         }
 
         Task selectedTask = Selection();
         GeneticOperator(selectedTask);
-        m_IndexOfTask = 0;
+        m_IndexOfTask = -1;
         return NextTask();
     }
 
@@ -107,6 +106,9 @@ public class DynamicDifficulty : MonoBehaviour
 
     public void Evaluation(float error, float time)
     {
+        if (m_IndexOfTask < 0)
+            return;
+
         m_Tasks[m_IndexOfTask].Error = error;
         m_Tasks[m_IndexOfTask].Time = time;
     }

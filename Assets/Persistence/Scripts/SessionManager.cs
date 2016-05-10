@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.Events;
@@ -125,8 +124,14 @@ public class SessionManager : Singleton<SessionManager>
     public void SaveSession()
     {
         string filename = string.Format("{0}/session_{1}.txt", Application.dataPath, m_Session.Timestamp);
-        using (StreamWriter writer = new StreamWriter(filename, true))
-            writer.WriteLine(m_Session.SaveToString());
+
+        using (FileStream file = File.Create(filename))
+        {
+            using (StreamWriter writer = new StreamWriter(file))
+            {
+                writer.WriteLine(m_Session.SaveToString());
+            }
+        }
     }
 }
 
