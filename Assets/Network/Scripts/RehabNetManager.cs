@@ -3,6 +3,7 @@
 public class RehabNetManager : Singleton<RehabNetManager>
 {
     private RehabNetConnection m_Connection;
+
     public RehabNetConnection Connection
     {
         get { return m_Connection; }

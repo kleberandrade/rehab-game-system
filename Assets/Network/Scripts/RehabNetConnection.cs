@@ -30,7 +30,7 @@ public class RehabNetConnection : MonoBehaviour
     public RehabNetGamePackage GamePackage
     {
         get { return m_SendGamePackage; }
-        set { m_SendGamePackage = value;  }
+        set { m_SendGamePackage = value; }
     }
 
     public RehabNetRobotPackage RobotPackage
@@ -88,6 +88,7 @@ public class RehabNetConnection : MonoBehaviour
         }
     }
     #endregion
+
 
     #region [ Send Method ]
     public void Send()
