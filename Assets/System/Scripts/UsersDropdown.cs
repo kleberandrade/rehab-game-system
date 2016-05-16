@@ -12,6 +12,7 @@ public class UsersDropdown : MonoBehaviour
     {
         m_Dropdown.onValueChanged.AddListener(OnPatientChanged);
         GetPatients();
+        OnPatientChanged(0);
     }
 
     public void GetPatients()
@@ -23,7 +24,6 @@ public class UsersDropdown : MonoBehaviour
             while ((line = reader.ReadLine()) != null)
             {
                 User user = User.CreateFromJSON(line);
-                SessionManager.Instance.AddPatient(user);
                 if (SessionManager.Instance.GetTherapistName().Equals(user.TherapistName))
                     patients.Add(user);
             }
@@ -39,7 +39,6 @@ public class UsersDropdown : MonoBehaviour
 
     public void SetPatients(List<User> patients)
     {
-
         m_Dropdown.options.Clear();
         foreach (User user in patients)
             m_Dropdown.options.Add(new Dropdown.OptionData(user.Name, m_ImageDefault));
@@ -49,13 +48,13 @@ public class UsersDropdown : MonoBehaviour
     public void SetPatient(User patient)
     {
         SessionManager.Instance.AddPatient(patient);
-        Debug.Log("Selected " + patient.SaveToString());
         m_Dropdown.options.Add(new Dropdown.OptionData(patient.Name, m_ImageDefault));
     }
 
     public void OnPatientChanged(int value)
     {
         User patientSelected = SessionManager.Instance.GetPatientsByIndex(value);
+        Debug.Log("Selected " + patientSelected.SaveToString());
         SessionManager.Instance.PatientSelected(patientSelected);
     }
 }

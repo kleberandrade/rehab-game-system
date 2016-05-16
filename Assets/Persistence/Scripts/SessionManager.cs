@@ -77,8 +77,8 @@ public class SessionManager : Singleton<SessionManager>
 
     public void AddPatients(List<User> patients)
     {
-        foreach (User user in patients)
-            AddPatient(user);
+        foreach (User patient in patients)
+            AddPatient(patient);
     }
 
     public void AddPatient(User patient)
