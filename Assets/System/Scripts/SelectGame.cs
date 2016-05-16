@@ -15,7 +15,7 @@ public class SelectGame : MonoBehaviour
 	}
 	
 	private void Select ()
-    {
+    {/*
 	    if (!RehabNetManager.Instance.Connection.IsConnected)
         {
             SystemDialogBox.Instance.Show(
@@ -33,11 +33,11 @@ public class SelectGame : MonoBehaviour
                 new UnityAction[] { null, new UnityAction(RehabNetManager.Instance.Connection.Home) });
         }
         else
-        {
+        {*/
             SessionManager.Instance.SetGame(new Game("The Cathcer"));
             SessionManager.Instance.SetDevice(new Device("MORE-W"));
             SessionManager.Instance.NewPerformance();
             SceneManager.LoadScene(m_SceneName);
-        }
+       // }
     }
 }

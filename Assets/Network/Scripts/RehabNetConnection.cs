@@ -45,7 +45,7 @@ public class RehabNetConnection : MonoBehaviour
     public void Connect()
     {
         m_RehabNetState = RehabNetState.Connecting;
-        Debug.Log(string.Format("Trying to connect in {0}:{1}", k_ServerHostName, k_ServerPort));
+        //Debug.Log(string.Format("Trying to connect in {0}:{1}", k_ServerHostName, k_ServerPort));
 
         if (IsConnected)
             return;
@@ -63,7 +63,7 @@ public class RehabNetConnection : MonoBehaviour
         }
         catch (Exception ex)
         {
-            Debug.LogError(ex.Message);
+            //Debug.LogError(ex.Message);
             Close();
             if (m_RehabNetState != RehabNetState.Disconnecting)
                 Connect();
@@ -75,13 +75,13 @@ public class RehabNetConnection : MonoBehaviour
         try
         {
             m_ClientSocket.EndConnect(asyncResult);
-            Debug.Log(string.Format("Connected to {0}", m_ClientSocket.RemoteEndPoint.ToString()));
+            //Debug.Log(string.Format("Connected to {0}", m_ClientSocket.RemoteEndPoint.ToString()));
             m_RehabNetState = RehabNetState.Playing;
             Send(m_SendGamePackage);
         }
         catch (Exception ex)
         {
-            Debug.LogError(ex.Message);
+            //Debug.LogError(ex.Message);
             Close();
             if (m_RehabNetState != RehabNetState.Disconnecting)
                 Connect();
@@ -105,7 +105,7 @@ public class RehabNetConnection : MonoBehaviour
         }
         catch (Exception ex)
         {
-            Debug.LogError(ex.Message);
+            //Debug.LogError(ex.Message);
             Close();
             if (m_RehabNetState != RehabNetState.Disconnecting)
                 Connect();
@@ -121,7 +121,7 @@ public class RehabNetConnection : MonoBehaviour
         }
         catch (Exception ex)
         {
-            Debug.LogError(ex.Message);
+            //Debug.LogError(ex.Message);
             Close();
             if (m_RehabNetState != RehabNetState.Disconnecting)
                 Connect();
@@ -138,7 +138,7 @@ public class RehabNetConnection : MonoBehaviour
         }
         catch (Exception ex)
         {
-            Debug.LogError(ex.Message);
+            //Debug.LogError(ex.Message);
             Close();
             if (m_RehabNetState != RehabNetState.Disconnecting)
                 Connect();
@@ -169,7 +169,7 @@ public class RehabNetConnection : MonoBehaviour
         }
         catch (Exception ex)
         {
-            Debug.LogError(ex.Message);
+            //Debug.LogError(ex.Message);
             Close();
             if (m_RehabNetState != RehabNetState.Disconnecting)
                 Connect();

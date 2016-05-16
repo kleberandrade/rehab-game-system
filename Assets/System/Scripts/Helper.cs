@@ -47,12 +47,13 @@ public class Helper
         return Normalization(WorldToViewport(position, depth), min, max);
     }
 
-    public static bool SaveJsonToFileText(string data, string filename, bool append)
+    public static bool SaveJsonToFileText(string data, string filename)
     {
         try
         {
-            using (StreamWriter writer = new StreamWriter(Application.dataPath + "/" + filename, append))
+            using (StreamWriter writer = File.CreateText(Application.dataPath + "/" + filename))
             {
+                Debug.Log(string.Format("Saving in {0} data {1}", Application.dataPath + "/" + filename, data));
                 writer.WriteLine(data);
             }
 

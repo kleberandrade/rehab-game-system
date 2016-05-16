@@ -137,12 +137,9 @@ public class SessionManager : Singleton<SessionManager>
             Directory.CreateDirectory("C:/RehabSystem/Save");
 
         string filename = string.Format("C:/RehabSystem/Save/session_{0}.txt", m_Session.Timestamp);
-
-        using (StreamWriter writer = new StreamWriter(File.Open(filename, FileMode.Append)))
-        {
+        Debug.Log(string.Format("Saving in {0} data {1}", filename, m_Session.SaveToString()));
+        using (StreamWriter writer = File.CreateText(filename))
             writer.WriteLine(m_Session.SaveToString());
-        }
-
     }
 }
 

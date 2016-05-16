@@ -26,7 +26,7 @@ public class RehabNetManager : Singleton<RehabNetManager>
 
     private void OnApplicationQuit()
     {
-        Debug.Log("Close connection");
+        //Debug.Log("Close connection");
         m_Connection.Close();
     }
 }

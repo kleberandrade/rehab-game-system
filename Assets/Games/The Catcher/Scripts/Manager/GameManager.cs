@@ -44,6 +44,7 @@ public class GameManager : MonoBehaviour
         m_Spawner.Spawn();
         while (m_Spawner.HasObjectToSpawner())
         {
+            SessionManager.Instance.AddPerformance("Position", RehabNetManager.Instance.Connection.RobotPackage.Position);
             yield return null;
         }
     }

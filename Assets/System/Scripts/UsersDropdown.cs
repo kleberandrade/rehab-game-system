@@ -49,6 +49,7 @@ public class UsersDropdown : MonoBehaviour
     public void SetPatient(User patient)
     {
         SessionManager.Instance.AddPatient(patient);
+        Debug.Log("Selected " + patient.SaveToString());
         m_Dropdown.options.Add(new Dropdown.OptionData(patient.Name, m_ImageDefault));
     }
 

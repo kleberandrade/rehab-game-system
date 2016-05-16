@@ -14,13 +14,13 @@ public class Session : IJsonData<Session>
 
     public Session()
     {
-        this.Timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+        this.Timestamp = DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss");
         this.Performances = new List<Performance>();
     }
 
     public Session(string timestamp, User patient, User therapist, Game game, Device device)
     {
-        this.Timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+        this.Timestamp = DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss");
         this.Patient = patient;
         this.Therapist = therapist;
         this.Game = game;
