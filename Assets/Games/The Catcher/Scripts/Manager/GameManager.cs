@@ -18,6 +18,9 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        if (PlayerPrefs.HasKey("NumberOfGoal"))
+            m_NumberOfGoals = PlayerPrefs.GetInt("NumberOfGoal");
+
         m_StartWait = new WaitForSeconds(m_StartDelay);
         m_EndWait = new WaitForSeconds(m_EndDelay);
         StartCoroutine(GameLoop());

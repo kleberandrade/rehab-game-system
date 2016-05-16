@@ -33,11 +33,24 @@ public class SelectGame : MonoBehaviour
                 new UnityAction[] { null, new UnityAction(RehabNetManager.Instance.Connection.Home) });
         }
         else
-        {*/
-            SessionManager.Instance.SetGame(new Game("The Cathcer"));
-            SessionManager.Instance.SetDevice(new Device("MORE-W"));
-            SessionManager.Instance.NewPerformance();
-            SceneManager.LoadScene(m_SceneName);
-       // }
+        {
+            
+            SystemDialogBox.Instance.Show(
+                 "Erro de callibração",
+                 "Por favor zere o centro do robô.",
+                 new string[] { "Cancelar", "Zerar", "Jogar" },
+                 new UnityAction[] { null, new UnityAction(RehabNetManager.Instance.Connection.Home), new UnityAction(ToPlay) });
+        }
+        */
+
+        ToPlay();
+    }
+
+    private void ToPlay()
+    {
+        SessionManager.Instance.SetGame(new Game("The Catcher"));
+        SessionManager.Instance.SetDevice(new Device("MORE-W"));
+        SessionManager.Instance.NewPerformance();
+        SceneManager.LoadScene(m_SceneName);
     }
 }

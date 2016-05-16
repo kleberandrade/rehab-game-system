@@ -6,7 +6,6 @@ public class Nut : MonoBehaviour
 {
     private static Score m_Score = null;
     private static SpawnerPoint m_Spawner = null;
-    private static CameraShake m_CameraShake = null;
 
     [SerializeField] private AudioClip m_CollidedGroundAudioClip;
     [SerializeField] private AudioClip m_CollidedPlayerAudioClip;
@@ -45,9 +44,6 @@ public class Nut : MonoBehaviour
 
         if (!m_Score)
             m_Score = FindObjectOfType<Score>();
-
-        if (!m_CameraShake)
-            m_CameraShake = FindObjectOfType<CameraShake>();
 
         m_OriginalRotate = m_Transform.rotation;
     }
