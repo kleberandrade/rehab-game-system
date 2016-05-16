@@ -1095,7 +1095,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b27206fd800f8c4bad3b3ca34bffb78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_TimeToSpawning: 0.2
+  m_TimeToSpawning: 1
   m_Target: {fileID: 690167239}
   m_ScreenLeft: 0.1
   m_ScreenRight: 0.9
