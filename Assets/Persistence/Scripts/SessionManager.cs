@@ -12,6 +12,11 @@ public class SessionManager : Singleton<SessionManager>
     private bool m_IsHoming = false;
     #endregion
 
+    private void Start()
+    {
+        m_IsHoming = false;
+    }
+
     #region [ Login ]
     public void Login(string username, string password)
     {
@@ -93,12 +98,14 @@ public class SessionManager : Singleton<SessionManager>
 
     public void PatientSelected(User patient)
     {
+        IsHoming = false;
         m_Session.Patient = patient;
     }
 
     public bool IsHoming
     {
         get { return m_IsHoming; }
+        set { m_IsHoming = value; }
     }
 
     public void SetGame(Game game)
@@ -123,15 +130,19 @@ public class SessionManager : Singleton<SessionManager>
 
     public void SaveSession()
     {
-        string filename = string.Format("{0}/session_{1}.txt", Application.dataPath, m_Session.Timestamp);
+        if (!Directory.Exists("C:/RehabSystem"))
+            Directory.CreateDirectory("C:/RehabSystem");
 
-        using (FileStream file = File.Create(filename))
+        if (!Directory.Exists("C:/RehabSystem/Save"))
+            Directory.CreateDirectory("C:/RehabSystem/Save");
+
+        string filename = string.Format("C:/RehabSystem/Save/session_{0}.txt", m_Session.Timestamp);
+
+        using (StreamWriter writer = new StreamWriter(File.Open(filename, FileMode.Append)))
         {
-            using (StreamWriter writer = new StreamWriter(file))
-            {
-                writer.WriteLine(m_Session.SaveToString());
-            }
+            writer.WriteLine(m_Session.SaveToString());
         }
+
     }
 }
 
