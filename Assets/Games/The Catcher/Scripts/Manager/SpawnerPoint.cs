@@ -91,8 +91,7 @@ public class SpawnerPoint : MonoBehaviour
             Vector3 min = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, Helper.CameraDepht(go.transform.position)));
             Vector3 max = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, Helper.CameraDepht(go.transform.position)));
             float diff = Mathf.Abs(max.y - min.y);
-            go.GetComponent<Nut>().Speed *= Helper.Normalization(m_TasksToCalibration[0].Speed, 0.1f * diff, 0.5f * diff);
-
+            go.GetComponent<Nut>().Speed = (diff * 0.1f) + m_TasksToCalibration[0].Speed * (diff * 0.4f);
             m_TasksToCalibration.RemoveAt(0);
         }
         else
@@ -116,7 +115,7 @@ public class SpawnerPoint : MonoBehaviour
             Vector3 min = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, Helper.CameraDepht(go.transform.position)));
             Vector3 max = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, Helper.CameraDepht(go.transform.position)));
             float diff = Mathf.Abs(max.y - min.y);
-            go.GetComponent<Nut>().Speed *= Helper.Normalization(m_TasksToCalibration[0].Speed, 0.1f * diff, 0.5f * diff);
+            go.GetComponent<Nut>().Speed = (diff * 0.1f) + task.Speed * (diff * 0.4f);
         }
 
         m_Particles.Play();
@@ -128,12 +127,6 @@ public class SpawnerPoint : MonoBehaviour
         yield return new WaitForSeconds(m_TimeToSpawning);
 
         go.SetActive(true);
-
-        
-        /*
-        Nut nut = go.GetComponent<Nut>();
-        nut.Speed = task.Speed * Mathf.Abs(max.y - min.y);
-        */
 
         m_Score.Next();
         m_PlayerMovement.LookAt(m_Transform.position);

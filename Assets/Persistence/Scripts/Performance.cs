@@ -10,7 +10,7 @@ public class Performance : IJsonData<Performance>
 
     public Performance(string metric, double value)
     {
-        this.Timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ffff");
+        this.Timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
         this.Metric = metric;
         this.Value = value;
     }
