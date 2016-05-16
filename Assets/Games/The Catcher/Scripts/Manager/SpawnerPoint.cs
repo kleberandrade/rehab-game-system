@@ -105,6 +105,7 @@ public class SpawnerPoint : MonoBehaviour
             targetPosition.x += distance * direction;
             targetPosition.x = Helper.ViewportToWord(targetPosition.x, m_ScreenLeft, m_ScreenRight, Helper.CameraDepht(m_Transform.position));
             m_Transform.position = targetPosition;
+
             go.transform.position = m_Transform.position;
         }
 
@@ -117,6 +118,10 @@ public class SpawnerPoint : MonoBehaviour
         yield return new WaitForSeconds(m_TimeToSpawning);
 
         go.SetActive(true);
+        Vector3 min = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, Helper.CameraDepht(go.transform.position)));
+        Vector3 max = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, Helper.CameraDepht(go.transform.position)));
+
+        go.GetComponent<Nut>().Speed = task.Speed * Mathf.Abs(max.y - min.y);
         m_Score.Next();
         m_PlayerMovement.LookAt(m_Transform.position);
 

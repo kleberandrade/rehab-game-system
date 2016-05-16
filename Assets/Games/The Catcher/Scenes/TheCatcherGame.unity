@@ -483,6 +483,10 @@ MonoBehaviour:
   m_Kc: 0.5319
   m_Md: 0.1
   m_Ms: 0.1
+  m_MinDistante: 0
+  m_MaxDistante: 0
+  m_MinSpeed: 0
+  m_MaxSpeed: 0
   m_NumberOfTask: 5
   m_GainToNumberOfTask: 4
 --- !u!4 &112353190 stripped
@@ -1091,7 +1095,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b27206fd800f8c4bad3b3ca34bffb78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_TimeToSpawning: 1
+  m_TimeToSpawning: 0.2
   m_Target: {fileID: 690167239}
   m_ScreenLeft: 0.1
   m_ScreenRight: 0.9
@@ -3040,11 +3044,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22479358, guid: 1e425442549871e41b482e87c3c81f1b, type: 2}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 22479358, guid: 1e425442549871e41b482e87c3c81f1b, type: 2}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 11425246, guid: 1e425442549871e41b482e87c3c81f1b, type: 2}
       propertyPath: m_FillAmount

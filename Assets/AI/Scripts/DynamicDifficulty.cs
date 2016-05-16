@@ -17,17 +17,17 @@ public class DynamicDifficulty : MonoBehaviour
     public float m_Md = 0.1f;
     [Range(0.0f, 1.0f)]
     public float m_Ms = 0.1f;
+    // Constantes para o cromossomo
+    public float m_MinDistante = 0.01f;
+    public float m_MaxDistante = 0.5f;
+    public float m_MinSpeed = 0.1f;
+    public float m_MaxSpeed = 0.5f;
     // Número de tarefas
     public int m_NumberOfTask = 5;
     public int m_GainToNumberOfTask = 4;
-
+    // Tarefas
     private Task[] m_Tasks;
     private int m_IndexOfTask = 0;
-
-    private float m_MinDistante;
-    private float m_MaxDistante;
-    private float m_MinSpeed;
-    private float m_MaxSpeed;
 
     public void Start()
     {
