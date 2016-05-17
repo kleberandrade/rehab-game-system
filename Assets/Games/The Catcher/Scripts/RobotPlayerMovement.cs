@@ -30,8 +30,11 @@ public class RobotPlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        m_RobotAngle = RehabNetManager.Instance.Connection.RobotPackage.Position;
-        m_RobotAngle *= -1.0f;
+        if (RehabNetManager.Instance.Connection.IsConnected)
+        {
+            m_RobotAngle = RehabNetManager.Instance.Connection.RobotPackage.Position;
+            m_RobotAngle *= -1.0f;
+        }
 
         if (m_RobotAngle < m_MinPlayerAngle)
             m_MinPlayerAngle = (float)m_RobotAngle;
