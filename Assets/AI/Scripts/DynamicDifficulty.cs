@@ -63,12 +63,14 @@ public class DynamicDifficulty : MonoBehaviour
 
     public Task Selection()
     {
+        Debug.Log("GA: Evaluate fitness");
         // Calcula o fitness
         float[] fitness = new float[m_Tasks.Length];
         for (int i = 0; i < m_Tasks.Length; i++)
-            fitness[i] = m_Tasks[i].Fitness(m_Kd, m_Ks, m_Ke, m_Kc);
-
-        Debug.Log("GA: Evaluate fitness");
+        {
+            fitness[i] = m_Tasks[i].SetFitness(m_Kd, m_Ks, m_Ke, m_Kc);
+            Debug.Log(string.Format("GA: [{0}] = {1}", i, m_Tasks[i].ToString()));
+        }
 
         // Procura o Maior Fitness
         int indexOfBestFitness = 0;

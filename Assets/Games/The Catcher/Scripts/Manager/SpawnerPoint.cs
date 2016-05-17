@@ -91,7 +91,7 @@ public class SpawnerPoint : MonoBehaviour
             Vector3 min = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, Helper.CameraDepht(go.transform.position)));
             Vector3 max = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, Helper.CameraDepht(go.transform.position)));
             float diff = Mathf.Abs(max.y - min.y);
-            go.GetComponent<Nut>().Speed = (diff * 0.1f) + m_TasksToCalibration[0].Speed * (diff * 0.4f);
+            go.GetComponent<Nut>().Speed = (diff * 0.1f) + m_TasksToCalibration[0].Speed * (diff * 0.6f);
             m_TasksToCalibration.RemoveAt(0);
         }
         else
@@ -101,7 +101,7 @@ public class SpawnerPoint : MonoBehaviour
 
             // Define a direção de lançamento
             float direction = Random.Range(0.0f, 1.0f) <= targetPosition.x ? -1.0f : 1.0f;
-            float distance = Helper.InverseNormalization(task.Distance, 0.01f, 0.5f);
+            float distance = Helper.InverseNormalization(task.Distance, 0.1f, 0.5f);
             if (targetPosition.x + distance * direction < 0.0f || targetPosition.x + direction * distance > 1.0f)
                 direction *= -1.0f;
 
@@ -115,7 +115,7 @@ public class SpawnerPoint : MonoBehaviour
             Vector3 min = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, Helper.CameraDepht(go.transform.position)));
             Vector3 max = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, Helper.CameraDepht(go.transform.position)));
             float diff = Mathf.Abs(max.y - min.y);
-            go.GetComponent<Nut>().Speed = (diff * 0.1f) + task.Speed * (diff * 0.4f);
+            go.GetComponent<Nut>().Speed = (diff * 0.1f) + task.Speed * (diff * 0.6f);
         }
 
         m_Particles.Play();
@@ -191,10 +191,17 @@ public class SpawnerPoint : MonoBehaviour
     public void TargetCaptured()
     {
         m_TaskManager.Evaluation(0.0f, m_ElapsedTime/m_TotalTime);
+        m_TotalTime = 0.0f;
     }
 
     public void TargetFail()
     {
+        //       Vector3 min = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, m_PlayerMovement.transform.position.z));
+        //       Vector3 max = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, m_PlayerMovement.transform.position.z));
+        //       float diff = Mathf.Abs(max.x - min.x);
+
+        //       m_TaskManager.Evaluation(Mathf.Abs(m_PlayerMovement.transform.position.x - m_FinalTargetPosition.x) / diff, 0.0f);
         m_TaskManager.Evaluation(Mathf.Abs(m_PlayerMovement.transform.position.x - m_FinalTargetPosition.x), 0.0f);
+        m_TotalTime = 0.0f;
     }
 }
