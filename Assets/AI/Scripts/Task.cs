@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Text;
+using UnityEngine;
 
-public class Task : ICloneable
+[Serializable]
+public class Task : ICloneable, IJsonData<Task>
 {
-    public float Distance { get; set; }
-    public float Speed { get; set; }
-    public float Error { get; set; }
-    public float Time { get; set; }
-    public float Fitness { get; set; }
+    public float Distance;
+    public float Speed;
+    public float Error;
+    public float Time;
+    public float Fitness;
 
     public Task(float distance, float speed)
     {
@@ -29,5 +31,20 @@ public class Task : ICloneable
     public object Clone()
     {
         return this.MemberwiseClone();
+    }
+
+    public static Task CreateFromJSON(string jsonString)
+    {
+        return JsonUtility.FromJson<Task>(jsonString);
+    }
+
+    public string SaveToString()
+    {
+        return JsonUtility.ToJson(this);
+    }
+
+    public void Load(string savedData)
+    {
+        JsonUtility.FromJsonOverwrite(savedData, this);
     }
 }

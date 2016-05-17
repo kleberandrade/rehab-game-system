@@ -51,6 +51,7 @@ public class SelectGame : MonoBehaviour
         SessionManager.Instance.SetGame(new Game("The Catcher"));
         SessionManager.Instance.SetDevice(new Device("MORE-W"));
         SessionManager.Instance.NewPerformance();
+        SessionManager.Instance.NewTasks();
         SceneManager.LoadScene(m_SceneName);
     }
 }

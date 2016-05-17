@@ -10,7 +10,8 @@ public class Session : IJsonData<Session>
     public User Therapist;
     public Game Game;
     public Device Device;
-    public List<Performance> Performances;
+    public List<Task> Tasks;
+    public List<Performance> Performances;    
 
     public Session()
     {

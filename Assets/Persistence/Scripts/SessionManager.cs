@@ -123,9 +123,19 @@ public class SessionManager : Singleton<SessionManager>
         m_Session.Performances.Add(new Performance(metric, value));
     }
 
+    public void AddTasks(Task task)
+    {
+        m_Session.Tasks.Add((Task)task.Clone());
+    }
+
     public void NewPerformance()
     {
         m_Session.Performances = new List<Performance>();
+    }
+
+    public void NewTasks()
+    {
+        m_Session.Tasks = new List<Task>();
     }
 
     public void SaveSession()

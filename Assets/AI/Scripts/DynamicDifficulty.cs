@@ -65,6 +65,7 @@ public class DynamicDifficulty : MonoBehaviour
         {
             fitness[i] = m_Tasks[i].SetFitness(m_Kd, m_Ks, m_Ke, m_Kc);
             Debug.Log(string.Format("GA: [{0}] = {1}", i, m_Tasks[i].ToString()));
+            SessionManager.Instance.AddTasks(m_Tasks[i]);
         }
 
         // Procura o Maior Fitness

@@ -7,10 +7,6 @@ public class RobotPlayerMovement : MonoBehaviour
     private PlayerMovement m_PlayerMovement;
 
     [Range(0.0f, -90.0f)]
-    public float m_MinRobotAngle = -90.0f;
-    [Range(0.0f, 90.0f)]
-    public float m_MaxRobotAngle = 90.0f;
-    [Range(0.0f, -90.0f)]
     public float m_MinPlayerAngle = -90.0f;
     [Range(0.0f, 90.0f)]
     public float m_MaxPlayerAngle = 90.0f;
@@ -18,7 +14,6 @@ public class RobotPlayerMovement : MonoBehaviour
     public float m_ScreenLeft = 0.1f;
     [Range(0.0f, 1.0f)]
     public float m_ScreenRight = 0.9f;
-    public bool m_Debug = false;
     [Range(-90.0f, 90.0f)]
     public double m_RobotAngle = 0.0f;
 
