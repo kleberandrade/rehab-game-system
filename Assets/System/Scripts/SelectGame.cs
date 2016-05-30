@@ -52,6 +52,7 @@ public class SelectGame : MonoBehaviour
         SessionManager.Instance.SetDevice(new Device("MORE-W"));
         SessionManager.Instance.NewPerformance();
         SessionManager.Instance.NewTasks();
+        SessionManager.Instance.NewSession();
         SceneManager.LoadScene(m_SceneName);
     }
 }

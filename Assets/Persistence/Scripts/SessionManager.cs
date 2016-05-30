@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.Events;
@@ -136,6 +137,11 @@ public class SessionManager : Singleton<SessionManager>
     public void NewTasks()
     {
         m_Session.Tasks = new List<Task>();
+    }
+
+    public void NewSession()
+    {
+        m_Session.Timestamp = DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss");
     }
 
     public void SaveSession()
