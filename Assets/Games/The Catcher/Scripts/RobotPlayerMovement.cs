@@ -7,9 +7,9 @@ public class RobotPlayerMovement : MonoBehaviour
     private PlayerMovement m_PlayerMovement;
 
     [Range(0.0f, -90.0f)]
-    public float m_MinPlayerAngle = -90.0f;
+    public float m_MinPlayerAngle = -45.0f; // The start angle must be higher than patient's wrist min angle
     [Range(0.0f, 90.0f)]
-    public float m_MaxPlayerAngle = 90.0f;
+    public float m_MaxPlayerAngle = 45.0f;  // The start angle must be lower than patient's wrist max angle
     [Range(0.0f, 1.0f)]
     public float m_ScreenLeft = 0.1f;
     [Range(0.0f, 1.0f)]

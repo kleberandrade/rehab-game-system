@@ -28,7 +28,7 @@ public class Helper
     public static float ViewportToWord(float position, float min, float max, float depth)
     {
         position = InverseNormalization(position, min, max);
-        return Camera.main.ViewportToWorldPoint(new Vector3(position, 0, depth)).x;
+        return Camera.main.ViewportToWorldPoint(new Vector3 (position, 0, depth)).x;
     }
 
     public static float WorldToViewport(Vector3 position, float depth)

@@ -4,7 +4,7 @@ using System.Collections;
 public class PlayerEyes : MonoBehaviour 
 {
     [SerializeField] private Texture[] m_Eyes;
-    [SerializeField] private float m_RepeatRate = 0.3f;
+    [SerializeField] private float m_RepeatRate = 0.15f;
     [Range(0.0f, 1.0f)]
     [SerializeField] private float m_Threshold = 0.7f;
 

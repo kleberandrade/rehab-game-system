@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class StartCounter : MonoBehaviour
 {
-    [SerializeField] private string[] m_TextToCounter = { "3", "2", "1", "Vai!" };
+    [SerializeField] private string[] m_TextToCounter = {"10", "9", "8", "7", "6", "5", "4", "3", "2", "1", "Vai!" };
     [SerializeField] private float m_FadeTime = 0.5f;
     [SerializeField] private AudioClip m_CountingAudioClip;
     [SerializeField] private AudioClip m_FinishingAudioClip;

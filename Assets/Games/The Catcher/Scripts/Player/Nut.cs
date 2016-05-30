@@ -108,12 +108,14 @@ public class Nut : MonoBehaviour
         Vector3 capturedPosition = m_Transform.position;
         Vector3 scorePosition = m_Score.WorldPoint(m_Transform.position);
         
-        do
+    /*    do
         {
             transform.position = Vector3.Lerp(capturedPosition, scorePosition, (Time.time - capturedTime) / m_Time);
             yield return null;
         } while (Vector3.Distance(transform.position, scorePosition) > 0.001f);
+*/ // This may be a distraction for the patient, should be replaced by a "+1" indication or similar over the basket
 
+        yield return null;
         m_Spawner.Spawn();
         m_Score.Up();
         Disappear();
