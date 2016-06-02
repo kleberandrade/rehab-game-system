@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.CrashLog;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
@@ -39,6 +40,7 @@ public class SessionManager : Singleton<SessionManager>
 
         if (success)
         {
+            CrashReporting.Init("c31e08ef-2237-4e0e-a5a4-4f085e756c78", "1.0.0", m_Session.Therapist.Name);
             SceneManager.LoadScene("Hub");
         }
         else
