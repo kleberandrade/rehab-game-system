@@ -17,7 +17,6 @@ public class RegisterUser : MonoBehaviour
     private Button m_RegisterButton;
 
     private AudioSource m_AudioSource;
-    private UnityAction m_CloseAction;
 
     private ShowAndHidePanel m_Transition;
 

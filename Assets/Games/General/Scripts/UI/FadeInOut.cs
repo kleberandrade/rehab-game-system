@@ -54,5 +54,7 @@ public class FadeInOut : MonoBehaviour
             progress += rate * Time.deltaTime;
             yield return null;
         }
+
+        m_CanvasGroup.alpha = endAlpha;
     }
 }

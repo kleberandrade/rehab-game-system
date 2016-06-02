@@ -1,20 +1,18 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(AudioSource))]
 [RequireComponent(typeof(FadeInOut))]
 public class Gameover : MonoBehaviour
 {
     private FadeInOut m_Fade;
-    private StatsManager m_StatsManager;
     private Button m_ButtonClose;
     private AudioSource m_AudioSource;
 
     private void Awake ()
     {
         m_AudioSource = GetComponent<AudioSource>();
-        m_StatsManager = GetComponentInChildren<StatsManager>();
         m_Fade = GetComponent<FadeInOut>();
 	}
 

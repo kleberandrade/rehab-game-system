@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class ShutDown : MonoBehaviour
 {
-    [SerializeField] private Button m_ShutDownButton;
+    public Button m_ShutDownButton;
     private UnityAction m_YesAction;
     private UnityAction m_NoAction;
     private AudioSource m_AudioSource;

@@ -33,6 +33,9 @@ public class GameManager : MonoBehaviour
     private float m_StartTime;
     private float m_EndTime;
 
+    public bool m_DebugMode = false;
+    public int m_DebugNumberOfTargets = 25;
+
     private void Start()
     {
         m_Score = FindObjectOfType<Score>();        
@@ -44,10 +47,10 @@ public class GameManager : MonoBehaviour
         m_Robot = FindObjectOfType<RobotPlayerMovement>();
         m_Spawner = FindObjectOfType<Spawner>();
 
-        if (PlayerPrefs.HasKey("NumberOfGoal"))
-            m_NumberOfTargets = PlayerPrefs.GetInt("NumberOfGoal");
+        if (m_DebugMode || !PlayerPrefs.HasKey("NumberOfGoal"))
+            m_NumberOfTargets = m_DebugNumberOfTargets;
         else
-            m_NumberOfTargets = 10;
+            m_NumberOfTargets = PlayerPrefs.GetInt("NumberOfGoal");
 
         Debug.Log(string.Format("Game with {0} targets.", m_NumberOfTargets));
 
@@ -67,8 +70,8 @@ public class GameManager : MonoBehaviour
         Parameters.DepthScreen = Helper.CameraDepht(m_Player.position);
         Parameters.MaxDistance = 0.5f;
         Parameters.MinDistance = 0.1f;
-        Parameters.MaxSpeed = 0.75f;
-        Parameters.MinSpeed = 0.05f;
+        Parameters.MaxSpeed = 1.0f;
+        Parameters.MinSpeed = 0.1f;
 
         Vector3 min = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, Parameters.DepthScreen));
         Vector3 max = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, Parameters.DepthScreen));
@@ -83,7 +86,7 @@ public class GameManager : MonoBehaviour
     {
         yield return StartCoroutine(Starting());
         yield return StartCoroutine(Calibrating());
-        SessionManager.Instance.NewSession();
+        //SessionManager.Instance.NewSession();
         yield return StartCoroutine(Playing());
         yield return StartCoroutine(Ending());
     }
@@ -118,7 +121,7 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator Playing()
     {
-        m_TextHint.Pulse(m_StartMessage, 5);
+        m_TextHint.Pulse(m_PlayMessage, 5);
         m_TaskManager.InitializeRandomTasks();
         do
         {
@@ -137,15 +140,14 @@ public class GameManager : MonoBehaviour
     private IEnumerator Ending()
     {
         m_EndTime = Time.time;
-        m_StatsManager.SetScore(Mathf.RoundToInt(m_Score.Point / m_Score.Targets * 100.0f), ArrowType.Up);
+        m_StatsManager.SetScore(100.0f * m_Score.Point / m_Score.Targets, ArrowType.Up);
         m_StatsManager.SetTime(Mathf.RoundToInt(m_EndTime - m_StartTime), ArrowType.Up);
         //m_StatsManager.SetSkill(string.Format("{0:0.0}",m_TaskManager.Skill), ArrowType.Up);
         //m_StatsManager.SetDifficulty(string.Format("{0:0.0}", m_TaskManager.Difficulty), ArrowType.Up);
         //m_StatsManager.SetRobotInit(m_TaskManager.RobotInit, ArrowType.Up);
 
         m_Gameover.Show();
-
-        SessionManager.Instance.SaveSession();
+        //SessionManager.Instance.SaveSession();
 
         yield return m_EndWait;
     }
@@ -162,9 +164,6 @@ public class GameManager : MonoBehaviour
         if (m_GameState == GameState.Calibrating)
             return;
 
-
-
-        Debug.Log(string.Format("Next target with captured = {0}.", captured));
         m_Score.NextTarget();
         if (captured)
             m_Score.NextPoint();

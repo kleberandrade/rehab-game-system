@@ -30,7 +30,6 @@ public class Score : MonoBehaviour
 
     public void SetNumberOfTargets(int numberOfTargets)
     {
-        Debug.Log("Score: Set number of targets = " + numberOfTargets);
         m_NumberOfTargets = numberOfTargets;
         m_Slider.minValue = 0;
         m_Slider.maxValue = m_NumberOfTargets;

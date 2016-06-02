@@ -6,9 +6,9 @@ public class RobotPlayerMovement : MonoBehaviour
     private PlayerMovement m_PlayerMovement;
 
     [Range(-90.0f, 90.0f)]
-    public float m_LeftPlayerAngle = 0.0f; // The start angle must be higher than patient's wrist min angle
+    public float m_LeftPlayerAngle = -10.0f; // The start angle must be higher than patient's wrist min angle
     [Range(-90.0f, 90.0f)]
-    public float m_RightPlayerAngle = 0.0f;  // The start angle must be lower than patient's wrist max angle
+    public float m_RightPlayerAngle = 10.0f;  // The start angle must be lower than patient's wrist max angle
     [Range(-90.0f, 90.0f)]
     public double m_RobotAngle = 0.0f;
     private float m_Horizontal;
@@ -38,8 +38,9 @@ public class RobotPlayerMovement : MonoBehaviour
         if (m_State == PlayerState.Playing)
             m_Horizontal = Helper.Normalization((float)m_RobotAngle, m_LeftPlayerAngle, m_RightPlayerAngle);
         else
-            m_Horizontal = Helper.Normalization((float)m_RobotAngle, -90, 90);
+            m_Horizontal = Helper.Normalization((float)m_RobotAngle, -90.0f, 90.0f);
 
+        float h = m_Horizontal;
 
         m_Horizontal = Helper.ViewportToWord(m_Horizontal, 
             GameManager.Parameters.LeftScreen,

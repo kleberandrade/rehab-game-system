@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class LoginManager : MonoBehaviour
 {
-    [SerializeField] private RectTransform m_LoginPanel;
+    public RectTransform m_LoginPanel;
     private InputField m_EmailInputValue;
     private InputField m_PasswordInputValue;
     private Toggle m_RememberToggle;
