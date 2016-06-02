@@ -22,18 +22,18 @@ public class SessionManager : Singleton<SessionManager>
     public void Login(string username, string password)
     {
         bool success = false;
-        using (StreamReader reader = new StreamReader(Application.dataPath + "/user.txt"))
+        TextAsset userFile = Resources.Load<TextAsset>("user");
+        string[] linesFromfile = userFile.text.Split("\n"[0]);
+
+        for (int i = 0; i < linesFromfile.Length; i++)
         {
-            string line;
-            while ((line = reader.ReadLine()) != null)
+            string line = linesFromfile[i];
+            User user = User.CreateFromJSON(line);
+            if (username.Equals(user.Username) && password.Equals(user.Password))
             {
-                User user = User.CreateFromJSON(line);
-                if (username.Equals(user.Username) && password.Equals(user.Password))
-                {
-                    m_Session.Therapist = user;
-                    success = true;
-                    break;
-                }
+                m_Session.Therapist = user;
+                success = true;
+                break;
             }
         }
 
@@ -55,11 +55,14 @@ public class SessionManager : Singleton<SessionManager>
     #region [ Create/Save New User ]
     public bool SaveNewUser(string data)
     {
+        string fileName = string.Empty;
+
         try
         {
-            using (StreamWriter writer = new StreamWriter(Application.dataPath + "/user.txt", true))
+            fileName = Application.dataPath + "/Resources/user.txt";
+            using (StreamWriter writer = new StreamWriter(fileName, true))
             {
-                writer.WriteLine(data);
+                writer.Write("\n" + data);
             }
 
             return true;
@@ -69,7 +72,7 @@ public class SessionManager : Singleton<SessionManager>
             return false;
         }
     }
-    #endregion
+#endregion
 
     public string GetTherapistName()
     {

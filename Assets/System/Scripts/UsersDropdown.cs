@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 public class UsersDropdown : MonoBehaviour
 {
-    [SerializeField] private Dropdown m_Dropdown;
-    [SerializeField] private Sprite m_ImageDefault;
+    public Dropdown m_Dropdown;
+    public Sprite m_ImageDefault;
 
     private void Start ()
     {
@@ -18,16 +18,19 @@ public class UsersDropdown : MonoBehaviour
     public void GetPatients()
     {
         List<User> patients = new List<User>();
-        using (StreamReader reader = new StreamReader(Application.dataPath + "/user.txt"))
+        TextAsset userFile = Resources.Load<TextAsset>("user");
+        string[] linesFromfile = userFile.text.Split("\n"[0]);
+        string therapistName = SessionManager.Instance.GetTherapistName();
+
+        for (int i = 0; i < linesFromfile.Length; i++)
         {
-            string line;
-            while ((line = reader.ReadLine()) != null)
-            {
-                User user = User.CreateFromJSON(line);
-                if (SessionManager.Instance.GetTherapistName().Equals(user.TherapistName))
-                    patients.Add(user);
-            }
+            string line = linesFromfile[i];
+            User user = User.CreateFromJSON(line);        
+            if (therapistName.Equals(user.TherapistName))
+                patients.Add(user);
         }
+
+        patients.Sort();
 
         if (patients.Count > 0)
             SetPatients(patients);
@@ -54,7 +57,6 @@ public class UsersDropdown : MonoBehaviour
     public void OnPatientChanged(int value)
     {
         User patientSelected = SessionManager.Instance.GetPatientsByIndex(value);
-        Debug.Log("Selected " + patientSelected.SaveToString());
         SessionManager.Instance.PatientSelected(patientSelected);
     }
 }

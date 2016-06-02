@@ -40,8 +40,6 @@ public class RobotPlayerMovement : MonoBehaviour
         else
             m_Horizontal = Helper.Normalization((float)m_RobotAngle, -90.0f, 90.0f);
 
-        float h = m_Horizontal;
-
         m_Horizontal = Helper.ViewportToWord(m_Horizontal, 
             GameManager.Parameters.LeftScreen,
             GameManager.Parameters.RightScreen,

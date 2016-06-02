@@ -2,7 +2,7 @@
 using UnityEngine;
 
 [Serializable]
-public class User : IJsonData<User>
+public class User : IJsonData<User>, IComparable<User>
 { 
     public string Name;
     public string Username;
@@ -30,5 +30,10 @@ public class User : IJsonData<User>
     public void Load(string savedData)
     {
         JsonUtility.FromJsonOverwrite(savedData, this);
+    }
+
+    public int CompareTo(User other)
+    {
+        return Name.CompareTo(other.Name);
     }
 }

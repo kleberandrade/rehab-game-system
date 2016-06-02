@@ -86,7 +86,7 @@ public class GameManager : MonoBehaviour
     {
         yield return StartCoroutine(Starting());
         yield return StartCoroutine(Calibrating());
-        //SessionManager.Instance.NewSession();
+        SessionManager.Instance.NewSession();
         yield return StartCoroutine(Playing());
         yield return StartCoroutine(Ending());
     }
@@ -145,10 +145,8 @@ public class GameManager : MonoBehaviour
         //m_StatsManager.SetSkill(string.Format("{0:0.0}",m_TaskManager.Skill), ArrowType.Up);
         //m_StatsManager.SetDifficulty(string.Format("{0:0.0}", m_TaskManager.Difficulty), ArrowType.Up);
         //m_StatsManager.SetRobotInit(m_TaskManager.RobotInit, ArrowType.Up);
-
         m_Gameover.Show();
-        //SessionManager.Instance.SaveSession();
-
+        SessionManager.Instance.SaveSession();
         yield return m_EndWait;
     }
 

@@ -37,7 +37,7 @@ public class DynamicDifficulty : MonoBehaviour
         {
             m_Tasks[i].EvaluateFitness(m_Kd, m_Ks, m_Ke, m_Kc);
             Debug.Log(string.Format("GA: [{0}] = {1}", i, m_Tasks[i].ToString()));
-        //    SessionManager.Instance.AddTasks(m_Tasks[i]);
+            SessionManager.Instance.AddTasks(m_Tasks[i]);
         }
 
         // Seleciona o melhor alvo

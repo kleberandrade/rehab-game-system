@@ -1,0 +1,4 @@
+{"Name":"Gabriela Caseiro","Username":"gabriela","Password":"123","TherapistName":"gabriela"}
+{"Name":"Kleber de Oliveira Andrade","Username":"kleber","Password":"123","TherapistName":"gabriela"}
+{"Name":"Glauco Caurin","Username":"glauco","Password":"123","TherapistName":"gabriela"}
+{"Name":"Caio Benatti Moretti","Username":"caio","Password":"123","TherapistName":"gabriela"}
