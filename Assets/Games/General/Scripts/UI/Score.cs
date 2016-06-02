@@ -4,100 +4,62 @@ using UnityEngine.UI;
 
 public class Score : MonoBehaviour
 {
-    public Slider m_Slider;
-    public Text m_Text;
-    public CanvasGroup m_GroupToFadeAnimation;
+    private Slider m_Slider;
+    private Text m_Text;
+    private FadeInOut m_Fade;
+    private int m_CurrentTarget;
+    private int m_Point;
+    private int m_NumberOfTargets;
 
-    private int m_CurrentGoal;
-    private int m_CurrentScore;
-    private int m_MaxGoal = 300;
-    private float m_FadeTime = 0.3f;
-    private AudioSource m_ScoreUpAudio;
-    private RectTransform m_RectTransform;
-    private Camera m_Camera;
+    public int Point
+    {
+        get { return m_Point; }
+    }
+
+    public int Targets
+    {
+        get { return m_NumberOfTargets; }
+    }
 
     private void Awake()
     {
-        m_ScoreUpAudio = GetComponent<AudioSource>();
-        m_RectTransform = GetComponent<RectTransform>();
+        m_Slider = GetComponent<Slider>();
+        m_Text = GetComponentInChildren<Text>();
+        m_Fade = GetComponentInChildren<FadeInOut>();
     }
 
-    private void Start()
+    public void SetNumberOfTargets(int numberOfTargets)
     {
-        m_Camera = Camera.main;
-    }
-
-    public void Reset(int maxGoal)
-    {
-        m_FadeTime = m_ScoreUpAudio.clip.length;
-        m_MaxGoal = maxGoal;
+        Debug.Log("Score: Set number of targets = " + numberOfTargets);
+        m_NumberOfTargets = numberOfTargets;
         m_Slider.minValue = 0;
-        m_Slider.maxValue = m_MaxGoal;
-        m_CurrentScore = 0;
-        m_CurrentGoal = 0;
+        m_Slider.maxValue = m_NumberOfTargets;
+        m_Point = 0;
+        m_CurrentTarget = 0;
+
         SetHealthUI();
     }
 
-    public void Up()
+    public void NextPoint()
     {
-        if (m_CurrentScore >= m_CurrentGoal)
+        if (m_Point >= m_CurrentTarget)
             return;
 
-        m_CurrentScore++;
-        StartCoroutine("Fade");
+        m_Point++;
+        StartCoroutine(m_Fade.PulseInverse(0.2f));
+
+        SetHealthUI();
     }
 
-    public bool HasNext()
+    public void NextTarget()
     {
-        return m_CurrentGoal < m_MaxGoal;
-    }
-
-    public void Next()
-    {
-        if (!HasNext())
-            return;
-
-        m_CurrentGoal++;
+        m_CurrentTarget++;
         SetHealthUI();
     }
 
     private void SetHealthUI()
     {
-        m_Slider.value = Mathf.Min(m_CurrentGoal, m_MaxGoal);
-        m_Text.text = m_CurrentScore.ToString();
-    }
-
-    private IEnumerator Fade()
-    {
-        var rate = 1.0f/m_FadeTime;
-        var startAlpha = 1;
-        var endAlpha = 0;
-
-        for (var i = 0; i < 2; i++)
-        {
-            if (i == 1)
-                m_ScoreUpAudio.Play();
-
-            var progress = 0.0f;
-
-            while (progress < 1.0f)
-            {
-                m_GroupToFadeAnimation.alpha = Mathf.Lerp(startAlpha, endAlpha, progress);
-                progress += rate*Time.deltaTime;
-                yield return null;
-            }
-
-            SetHealthUI();
-            startAlpha = 0;
-            endAlpha = 1;
-        }
-    }
-
-    public Vector3 WorldPoint(Vector3 targetPosition)
-    {
-        float distance = Mathf.Abs(m_Camera.transform.position.z - targetPosition.z);
-        Vector3 position = m_RectTransform.position;
-        position.z = distance;
-        return Camera.main.ScreenToWorldPoint(position);
+        m_Slider.value = Mathf.Min(m_CurrentTarget, m_NumberOfTargets);
+        m_Text.text = m_Point.ToString();
     }
 }

@@ -16,6 +16,7 @@ public class Session : IJsonData<Session>
     public Session()
     {
         this.Timestamp = DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss");
+        this.Tasks = new List<Task>();
         this.Performances = new List<Performance>();
     }
 
@@ -26,6 +27,7 @@ public class Session : IJsonData<Session>
         this.Therapist = therapist;
         this.Game = game;
         this.Device = device;
+        this.Tasks = new List<Task>();
         this.Performances = new List<Performance>();
     }
 

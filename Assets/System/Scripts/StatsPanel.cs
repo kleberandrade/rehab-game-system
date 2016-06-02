@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.UI;
 
 public enum ArrowType
@@ -18,10 +17,10 @@ public class StatsPanel : MonoBehaviour
     }
 
     private Text m_Value;
-    public float Value
+    public string Value
     {
-        get { return float.Parse(m_Value.text); }
-        set { m_Value.text = value.ToString(); }
+        get { return m_Value.text; }
+        set { m_Value.text = value; }
     }
 
     private Image m_UpArrow;
@@ -48,6 +47,4 @@ public class StatsPanel : MonoBehaviour
         m_UpArrow = transform.GetChild(2).GetChild(0).GetComponent<Image>();
         m_DownArrow = transform.GetChild(2).GetChild(1).GetComponent<Image>();
     }
-
-
 }

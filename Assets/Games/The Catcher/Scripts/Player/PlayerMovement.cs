@@ -1,28 +1,24 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-
     public float m_PitchRange = 0.1f;
     public float m_DistanceToTurn = 2.0f;
-    public float m_WalkingSpeed = 0.1f; // Min velocity for starting "is walking" animation
-    public float m_SpeedMaxRot = 1.0f;
-
-    public int m_nSmoothing = 15;
-    private float[] m_AvgSpeed;
-    private int m_iSmoothing = -5;
+    public float m_WalkingSpeed = 0.3f; // Min velocity for starting "is walking" animation
+    public float m_SpeedRotation = 8.0f;
+    public float m_Smoothing = 15.0f;
+    private List<float> m_Speeds = new List<float>();
 
     private AudioSource m_MovementAudio;
     private float m_OriginalPitch;
-    private Vector3 m_TargetPosition = Vector3.zero;
     private Transform m_Transform;
     private Rigidbody m_Rigidbody;
     private Animator m_Animator;
     private Vector3 m_Movement;
     private Vector3 m_LastMovement;
     private Vector3 m_OriginalMovement;
-    private float m_LastTime; // Added for calculating speed
-    [SerializeField] private float m_Speed = 0.0f; // Caution: Now this variable can have a negative value
+    private float m_Speed = 0.0f; // Caution: Now this variable can have a negative value
     private bool m_IsWalking = false;
 
     private void Awake()
@@ -36,18 +32,16 @@ public class PlayerMovement : MonoBehaviour
     private void Start()
     {
         m_OriginalPitch = m_MovementAudio.pitch;
-        m_Movement = m_Transform.position;
         m_OriginalMovement = m_Transform.position;
+        m_Movement = m_Transform.position;
         m_LastMovement = m_Movement;
-        m_LastTime = Time.time;
-        m_AvgSpeed = new float[m_nSmoothing];
     }
 
     private void FixedUpdate()
     {
-        CheckTurning();
-
         Move(m_Movement);
+
+        CheckTurning();
 
         Animating();
 
@@ -61,28 +55,15 @@ public class PlayerMovement : MonoBehaviour
 
     private void CheckTurning()
     {
-   /*     if (Mathf.Abs(m_Movement.x - m_TargetPosition.x) > m_DistanceToTurn)
-        {
-            if (m_Movement.x > m_LastMovement.x)
-            {
-                Turning(1);
-            }
-            else if (m_Movement.x < m_LastMovement.x)
-            {
-                Turning(-1);
-            }
-        }*/ 
-
-        Turning(Mathf.Clamp(m_Speed / m_SpeedMaxRot, -1f, 1f));
+        Turning(Mathf.Clamp(m_Speed / m_SpeedRotation, -1f, 1f));
     }
 
     private void Turning(float horizontal)
     {
-        //Vector3 targetDirection = new Vector3(horizontal, 0.0f, 0.0f);
-        Vector3 targetDirection = new Vector3(-Mathf.Sin(horizontal * Mathf.PI / 2), 0.0f, -Mathf.Cos(horizontal * Mathf.PI / 2));
-
+        Vector3 targetDirection = new Vector3(-Mathf.Sin(horizontal * Mathf.PI / 2.0f), 0.0f, -Mathf.Cos(horizontal * Mathf.PI / 2.0f));
         Quaternion targetRotation = Quaternion.LookRotation(targetDirection, Vector3.up);
-        m_Rigidbody.MoveRotation(targetRotation);
+        Quaternion newRotation = Quaternion.Lerp(m_Transform.rotation, targetRotation, Time.deltaTime * m_Smoothing);
+        m_Rigidbody.MoveRotation(newRotation);   
     }
 
     public void HorizontalMovement(float horizontal)
@@ -92,38 +73,20 @@ public class PlayerMovement : MonoBehaviour
 
     private void Animating()
     {
-        //float distance = Vector3.Distance(m_LastMovement, m_Movement);
         float distance = m_LastMovement.x - m_Movement.x;
 
-        //m_Speed = Mathf.Clamp(distance > 0.001f ? m_Speed + 0.25f : m_Speed - 0.2f, 0, 1);
-        if (m_iSmoothing < 0)
-        {
-            m_AvgSpeed[m_iSmoothing + 5] = distance / (Time.time - m_LastTime);
-            m_Speed += m_AvgSpeed[m_iSmoothing + 5] / m_nSmoothing;
-        }
-        else
-        {
-            m_Speed -= m_AvgSpeed[m_iSmoothing] / m_nSmoothing;
-            m_AvgSpeed[m_iSmoothing] = distance / (Time.time - m_LastTime);
-            m_Speed += m_AvgSpeed[m_iSmoothing] / m_nSmoothing;
-        }
-        m_iSmoothing = (m_iSmoothing + 1) % (m_nSmoothing - 1);
+        m_Speeds.Add(distance);
+        if (m_Speeds.Count > 5)
+            m_Speeds.RemoveAt(0);
 
-        //m_Speed = distance / (Time.time - m_LastTime); // Calculating vector speed
+        m_Speed = 0.0f;
+        m_Speeds.ForEach(x => m_Speed += x);
+        m_Speed /= (Time.deltaTime * 5.0f);
 
         m_LastMovement = m_Movement;
-        m_LastTime = Time.time;
-
         m_IsWalking = Mathf.Abs(m_Speed) > m_WalkingSpeed;
 
         m_Animator.SetBool("IsWalking", m_IsWalking);
-
-
-    }
-
-    public void LookAt(Vector3 position)
-    {
-        m_TargetPosition = position;
     }
 
     private void FootStepAudio()

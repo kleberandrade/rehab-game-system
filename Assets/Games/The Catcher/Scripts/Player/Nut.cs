@@ -4,13 +4,9 @@ using System.Collections;
 [RequireComponent(typeof(AudioSource))]
 public class Nut : MonoBehaviour 
 {
-    private static Score m_Score = null;
-    private static SpawnerPoint m_Spawner = null;
-
-    [SerializeField] private AudioClip m_CollidedGroundAudioClip;
-    [SerializeField] private AudioClip m_CollidedPlayerAudioClip;
-    [SerializeField] private float m_Speed = 0.5f;
-    [SerializeField] private float m_Time = 1.0f;
+    public AudioClip m_CollidedGroundAudioClip;
+    public AudioClip m_CollidedPlayerAudioClip;
+    public float m_Speed = 0.5f;
 
     private Animator m_Animator;
     private AudioSource m_AudioSource;
@@ -18,6 +14,7 @@ public class Nut : MonoBehaviour
     private Rigidbody m_Rigidbody;
     private Transform m_Transform;
     private Quaternion m_OriginalRotate;
+    private GameManager m_GameManager;
 
     private bool m_IsFalling = true;
 
@@ -39,12 +36,7 @@ public class Nut : MonoBehaviour
 
     private void Start()
     {
-        if (!m_Spawner)
-            m_Spawner = FindObjectOfType<SpawnerPoint>();
-
-        if (!m_Score)
-            m_Score = FindObjectOfType<Score>();
-
+        m_GameManager = FindObjectOfType<GameManager>();
         m_OriginalRotate = m_Transform.rotation;
     }
 
@@ -66,7 +58,6 @@ public class Nut : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Ground"))
         {
-            m_Spawner.TargetFail();
             m_Transform.rotation = m_OriginalRotate;
             m_AudioSource.clip = m_CollidedGroundAudioClip;
             m_AudioSource.Play();
@@ -80,44 +71,25 @@ public class Nut : MonoBehaviour
 
     private IEnumerator Destroy()
     {
-        yield return new WaitForSeconds(2.0f);
-        m_Spawner.Spawn();
-        m_Rigidbody.constraints = RigidbodyConstraints.None;
         yield return new WaitForSeconds(1.0f);
+        m_Rigidbody.constraints = RigidbodyConstraints.None;
+        yield return new WaitForSeconds(0.5f);
+        m_GameManager.NextTarget(false);
         Disappear();
     }
 
     public void Captured()
     {
-        m_Spawner.TargetCaptured();
         m_Transform.rotation = m_OriginalRotate;
         m_IsFalling = false;
         m_Collider.enabled = false;
         m_Rigidbody.constraints = RigidbodyConstraints.FreezeAll;
-        StartCoroutine(Markingpoint());
+        m_GameManager.NextTarget(true);
+        Disappear();
     }
 
     private void Disappear()
     {
         gameObject.SetActive(false);
-    }
-
-    private IEnumerator Markingpoint()
-    {
-        float capturedTime = Time.time;
-        Vector3 capturedPosition = m_Transform.position;
-        Vector3 scorePosition = m_Score.WorldPoint(m_Transform.position);
-        
-    /*    do
-        {
-            transform.position = Vector3.Lerp(capturedPosition, scorePosition, (Time.time - capturedTime) / m_Time);
-            yield return null;
-        } while (Vector3.Distance(transform.position, scorePosition) > 0.001f);
-*/ // This may be a distraction for the patient, should be replaced by a "+1" indication or similar over the basket
-
-        yield return null;
-        m_Spawner.Spawn();
-        m_Score.Up();
-        Disappear();
     }
 }

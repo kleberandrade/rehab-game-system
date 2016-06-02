@@ -61,9 +61,8 @@ public class RehabNetConnection : MonoBehaviour
                 new AsyncCallback(ConnectCallback),
                 null);
         }
-        catch (Exception ex)
+        catch
         {
-            //Debug.LogError(ex.Message);
             Close();
             if (m_RehabNetState != RehabNetState.Disconnecting)
                 Connect();
@@ -79,9 +78,8 @@ public class RehabNetConnection : MonoBehaviour
             m_RehabNetState = RehabNetState.Playing;
             Send(m_SendGamePackage);
         }
-        catch (Exception ex)
+        catch 
         {
-            //Debug.LogError(ex.Message);
             Close();
             if (m_RehabNetState != RehabNetState.Disconnecting)
                 Connect();
@@ -103,9 +101,8 @@ public class RehabNetConnection : MonoBehaviour
             byte[] buffer = package.Encode();
             m_ClientSocket.BeginSend(buffer, 0, buffer.Length, SocketFlags.None, new AsyncCallback(SendCallback), null);
         }
-        catch (Exception ex)
+        catch
         {
-            //Debug.LogError(ex.Message);
             Close();
             if (m_RehabNetState != RehabNetState.Disconnecting)
                 Connect();
@@ -119,9 +116,8 @@ public class RehabNetConnection : MonoBehaviour
             m_ClientSocket.EndSend(asyncResult);
             Receive();
         }
-        catch (Exception ex)
+        catch
         {
-            //Debug.LogError(ex.Message);
             Close();
             if (m_RehabNetState != RehabNetState.Disconnecting)
                 Connect();
@@ -136,9 +132,8 @@ public class RehabNetConnection : MonoBehaviour
         {
             m_ClientSocket.BeginReceive(m_BufferRead, 0, 12, SocketFlags.None, new AsyncCallback(ReceiveCallback), null);
         }
-        catch (Exception ex)
-        {
-            //Debug.LogError(ex.Message);
+        catch
+        { 
             Close();
             if (m_RehabNetState != RehabNetState.Disconnecting)
                 Connect();
@@ -167,9 +162,8 @@ public class RehabNetConnection : MonoBehaviour
 
             m_LastRehabNetRoboStatus = (RehabNetRobotStatus)m_ReceiveRobotPackage.Status;
         }
-        catch (Exception ex)
+        catch
         {
-            //Debug.LogError(ex.Message);
             Close();
             if (m_RehabNetState != RehabNetState.Disconnecting)
                 Connect();
@@ -184,6 +178,12 @@ public class RehabNetConnection : MonoBehaviour
 
         m_ClientSocket.Close();
         m_ClientSocket = null;
+    }
+
+    private void OnApplicationQuit()
+    {
+        m_RehabNetState = RehabNetState.Disconnecting;
+        Close();
     }
 
     public void Home()

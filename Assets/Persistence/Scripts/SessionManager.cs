@@ -142,6 +142,8 @@ public class SessionManager : Singleton<SessionManager>
     public void NewSession()
     {
         m_Session.Timestamp = DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss");
+        m_Session.Performances.Clear();
+        m_Session.Tasks.Clear();
     }
 
     public void SaveSession()

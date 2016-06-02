@@ -3,7 +3,7 @@ using System.Text;
 using UnityEngine;
 
 [Serializable]
-public class Task : ICloneable, IJsonData<Task>
+public class Task : IComparable<Task>, ICloneable, IJsonData<Task>
 {
     public float Distance;
     public float Speed;
@@ -17,10 +17,9 @@ public class Task : ICloneable, IJsonData<Task>
         Speed = speed;
     }
 
-    public float SetFitness(float kd, float ks, float ke, float kc)
+    public void EvaluateFitness(float kd, float ks, float ke, float kc)
     {
         Fitness = Distance * kd + Speed * ks - ke * Error + kc * Time;
-        return Fitness;
     }
 
     public override string ToString()
@@ -46,5 +45,15 @@ public class Task : ICloneable, IJsonData<Task>
     public void Load(string savedData)
     {
         JsonUtility.FromJsonOverwrite(savedData, this);
+    }
+
+    public int CompareTo(Task other)
+    {
+        if (Fitness < other.Fitness)
+            return -1;
+        else if (Fitness > other.Fitness)
+            return 1;
+        else
+            return 0;
     }
 }

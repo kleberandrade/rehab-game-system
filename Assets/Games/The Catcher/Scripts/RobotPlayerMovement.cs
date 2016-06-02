@@ -1,26 +1,21 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class RobotPlayerMovement : MonoBehaviour
 {
-    private float m_PlayerDepth;
+    private PlayerState m_State = PlayerState.None;
     private PlayerMovement m_PlayerMovement;
 
-    [Range(0.0f, -90.0f)]
-    public float m_MinPlayerAngle = -45.0f; // The start angle must be higher than patient's wrist min angle
-    [Range(0.0f, 90.0f)]
-    public float m_MaxPlayerAngle = 45.0f;  // The start angle must be lower than patient's wrist max angle
-    [Range(0.0f, 1.0f)]
-    public float m_ScreenLeft = 0.1f;
-    [Range(0.0f, 1.0f)]
-    public float m_ScreenRight = 0.9f;
+    [Range(-90.0f, 90.0f)]
+    public float m_LeftPlayerAngle = 0.0f; // The start angle must be higher than patient's wrist min angle
+    [Range(-90.0f, 90.0f)]
+    public float m_RightPlayerAngle = 0.0f;  // The start angle must be lower than patient's wrist max angle
     [Range(-90.0f, 90.0f)]
     public double m_RobotAngle = 0.0f;
+    private float m_Horizontal;
 
     private void Start ()
     {
         m_PlayerMovement = GetComponent<PlayerMovement>();
-        m_PlayerDepth = Helper.CameraDepht(transform.position);
 	}
 
     private void FixedUpdate()
@@ -31,15 +26,39 @@ public class RobotPlayerMovement : MonoBehaviour
             m_RobotAngle *= -1.0f;
         }
 
-        if (m_RobotAngle < m_MinPlayerAngle)
-            m_MinPlayerAngle = (float)m_RobotAngle;
+        if (m_State == PlayerState.Calibration || m_State == PlayerState.Playing)
+        {
+            if (m_RobotAngle < m_LeftPlayerAngle)
+                m_LeftPlayerAngle = (float)m_RobotAngle;
 
-        if (m_RobotAngle > m_MaxPlayerAngle)
-            m_MaxPlayerAngle = (float)m_RobotAngle;
+            if (m_RobotAngle > m_RightPlayerAngle)
+                m_RightPlayerAngle = (float)m_RobotAngle;
+        }
 
-        float horizontal = Helper.Normalization((float)m_RobotAngle, m_MinPlayerAngle, m_MaxPlayerAngle);
-        horizontal = Helper.ViewportToWord(horizontal, m_ScreenLeft, m_ScreenRight, m_PlayerDepth);
+        if (m_State == PlayerState.Playing)
+            m_Horizontal = Helper.Normalization((float)m_RobotAngle, m_LeftPlayerAngle, m_RightPlayerAngle);
+        else
+            m_Horizontal = Helper.Normalization((float)m_RobotAngle, -90, 90);
 
-        m_PlayerMovement.HorizontalMovement(horizontal);
+
+        m_Horizontal = Helper.ViewportToWord(m_Horizontal, 
+            GameManager.Parameters.LeftScreen,
+            GameManager.Parameters.RightScreen,
+            GameManager.Parameters.DepthScreen);
+
+        m_PlayerMovement.HorizontalMovement(m_Horizontal);
 	}
+
+    public PlayerState State
+    {
+        get { return m_State; }
+        set { m_State = value; }
+    }
+}
+
+public enum PlayerState
+{
+    None,
+    Calibration,
+    Playing
 }

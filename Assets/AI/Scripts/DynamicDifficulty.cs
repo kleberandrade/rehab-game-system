@@ -1,113 +1,81 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class DynamicDifficulty : MonoBehaviour
 {
-    // Constantes para calculo do fitness
-    [Range(0.0f,1.0f)]
+    #region [ Variables ]
     public float m_Kd = 0.3483f;
-    [Range(0.0f, 1.0f)]
     public float m_Ks = 0.4679f;
-    [Range(0.0f, 1.0f)]
     public float m_Ke = 0.6692f;
-    [Range(0.0f, 1.0f)]
     public float m_Kc = 0.5319f;
-    // Constantes para mutação
-    [Range(0.0f, 1.0f)]
-    public float m_Md = 0.1f;
-    [Range(0.0f, 1.0f)]
-    public float m_Ms = 0.1f;
-    // Número de tarefas
-    public int m_NumberOfTask = 5;
-    public int m_GainToNumberOfTask = 4;
-    // Tarefas
-    private Task[] m_Tasks;
+    public float m_MutationRate = 0.25f;
+    public int m_NumberOfInitialTasks = 20;
+    public int m_NumberOfTasks = 5;
+    private List<Task> m_Tasks = new List<Task>();
     private int m_IndexOfTask = 0;
-
-    public void Start()
-    {
-        InitializeRandomTasks();
-    }
+    #endregion
 
     public void InitializeRandomTasks()
     {
-        m_IndexOfTask = -1;
-        m_Tasks = new Task[m_NumberOfTask * m_GainToNumberOfTask];
-
-        for (int i = 0; i < m_Tasks.Length; i++)
-            m_Tasks[i] = new Task(Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f));
-
         Debug.Log("GA: Initialize random population...");
+        for (int i = 0; i < m_NumberOfInitialTasks; i++)
+            m_Tasks.Add(new Task(Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f)));
     }
 
-    public Task NextTask()
+    public Task GetTask()
     {
-        if (m_IndexOfTask < m_Tasks.Length - 1)
-        {
-            m_IndexOfTask++;
-            Task task = m_Tasks[m_IndexOfTask];
-            Debug.Log(string.Format("GA: Chromosome({0:00}): {1}", m_IndexOfTask + 1, task.ToString()));
-            return task;
-        }
-
-        Task selectedTask = Selection();
-        GeneticOperator(selectedTask);
-        m_IndexOfTask = -1;
-        return NextTask();
+        Task task = m_Tasks[m_IndexOfTask];
+        Debug.Log(string.Format("GA: Get chromosome({0:00}): {1}", m_IndexOfTask, task.ToString()));
+        return task;
     }
 
-    public Task Selection()
+    private void NextPopulation()
     {
+        // Avalia a população
         Debug.Log("GA: Evaluate fitness");
-        // Calcula o fitness
-        float[] fitness = new float[m_Tasks.Length];
-        for (int i = 0; i < m_Tasks.Length; i++)
+        for (int i = 0; i < m_Tasks.Count; i++)
         {
-            fitness[i] = m_Tasks[i].SetFitness(m_Kd, m_Ks, m_Ke, m_Kc);
+            m_Tasks[i].EvaluateFitness(m_Kd, m_Ks, m_Ke, m_Kc);
             Debug.Log(string.Format("GA: [{0}] = {1}", i, m_Tasks[i].ToString()));
-            SessionManager.Instance.AddTasks(m_Tasks[i]);
+        //    SessionManager.Instance.AddTasks(m_Tasks[i]);
         }
 
-        // Procura o Maior Fitness
-        int indexOfBestFitness = 0;
-        float bestFitness = fitness[0];
-        for (int i = 1; i < m_Tasks.Length; i++)
-        {
-            if (bestFitness < fitness[i])
-            {
-                indexOfBestFitness = i;
-                bestFitness = fitness[i];
-            }
-        }
+        // Seleciona o melhor alvo
+        m_Tasks.Sort();
+        Debug.Log(string.Format("GA: Selection chromosome {0}", m_Tasks[0].ToString()));
+        Task selectedTask = (Task)m_Tasks[m_Tasks.Count - 1].Clone();
 
-        Debug.Log("GA: Selection chromosome[" + indexOfBestFitness + "]: " + m_Tasks[indexOfBestFitness].ToString());
-        return (Task)m_Tasks[indexOfBestFitness].Clone();
-    }
+        // Criar a nova população
+        m_Tasks.Clear();
+        m_Tasks.Add(selectedTask);
 
-    public void GeneticOperator(Task selectedTasks)
-    {
-        m_Tasks = new Task[m_NumberOfTask];
-        m_Tasks[0] = selectedTasks;
-
-        // Crossover e Mutação
-        for (int i = 1; i < m_Tasks.Length; i++)
-        {
-            m_Tasks[i] = (Task)selectedTasks.Clone();
-            m_Tasks[i].Distance = Mathf.Clamp(m_Tasks[i].Distance + Random.Range(-m_Md, m_Md), 0.0f, 1.0f);
-            m_Tasks[i].Speed = Mathf.Clamp(m_Tasks[i].Speed + Random.Range(-m_Ms, m_Ms), 0.0f, 1.0f);
-            m_Tasks[i].Error = 0.0f;
-            m_Tasks[i].Time = 0.0f;
-        }
-
+        // Aplica o Crossover e Mutação
         Debug.Log("GA: Crossover and mutation...");
+        
+        for (int i = 1; i < m_NumberOfTasks; i++)
+        {
+            Task task = (Task)selectedTask.Clone();
+            task.Distance = Mathf.Clamp(task.Distance + Random.Range(-m_MutationRate, m_MutationRate), 0.0f, 1.0f);
+            task.Speed = Mathf.Clamp(task.Speed + Random.Range(-m_MutationRate, m_MutationRate), 0.0f, 1.0f);
+            task.Error = 0.0f;
+            task.Time = 0.0f;
+            task.Fitness = 0.0f;
+            Debug.Log(string.Format("GA: generate new chromosome({0:00}): {0}", i, task.ToString()));
+            m_Tasks.Add(task);
+        }
+
+        m_IndexOfTask = 0;
+
+        Debug.Log("GA: New population...");
     }
 
-    public void Evaluation(float error, float time)
+    public void EvaluationFitness(float error, float time)
     {
-        if (m_IndexOfTask < 0)
-            return;
-
         m_Tasks[m_IndexOfTask].Error = error;
         m_Tasks[m_IndexOfTask].Time = time;
+        m_IndexOfTask++;
+                
+        if (m_IndexOfTask > m_Tasks.Count - 1)
+            NextPopulation();
     }
 }
