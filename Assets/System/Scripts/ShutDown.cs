@@ -34,8 +34,10 @@ public class ShutDown : MonoBehaviour
 
     private void Quit()
     {
-        m_AudioSource.Play();
+        CancelInvoke();
+        StopAllCoroutines();
 
+        m_AudioSource.Play();
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else

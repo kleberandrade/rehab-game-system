@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
     private Transform m_Player;
     private RobotPlayerMovement m_Robot;
     private DynamicDifficulty m_TaskManager;
+    private PlayerMovement m_PlayerMovement;
     private TextHint m_TextHint;
     private StatsManager m_StatsManager;
     private bool m_TargetInGame = false;
@@ -36,6 +37,9 @@ public class GameManager : MonoBehaviour
     public bool m_DebugMode = false;
     public int m_DebugNumberOfTargets = 25;
 
+    private bool m_CapturedTarget;
+
+    #region [ Setup ]
     private void Start()
     {
         m_Score = FindObjectOfType<Score>();        
@@ -45,6 +49,7 @@ public class GameManager : MonoBehaviour
         m_StatsManager = FindObjectOfType<StatsManager>();
         m_Player = FindObjectOfType<PlayerMovement>().transform;
         m_Robot = FindObjectOfType<RobotPlayerMovement>();
+        m_PlayerMovement = FindObjectOfType<PlayerMovement>();
         m_Spawner = FindObjectOfType<Spawner>();
 
         if (m_DebugMode || !PlayerPrefs.HasKey("NumberOfGoal"))
@@ -81,16 +86,20 @@ public class GameManager : MonoBehaviour
         Parameters.Top = max.y;
         Parameters.Right = min.x;
     }
+    #endregion
 
+    #region [ Game Loop ]
     private IEnumerator GameLoop()
     {
         yield return StartCoroutine(Starting());
         yield return StartCoroutine(Calibrating());
-        SessionManager.Instance.NewSession();
+        //SessionManager.Instance.NewSession();
         yield return StartCoroutine(Playing());
         yield return StartCoroutine(Ending());
     }
+    #endregion
 
+    #region [ Starting ]
     private IEnumerator Starting()
     {
         m_Score.SetNumberOfTargets(m_NumberOfTargets);
@@ -98,7 +107,9 @@ public class GameManager : MonoBehaviour
         m_TextHint.Pulse(m_StartMessage, m_StartDelay - 2);
         yield return m_StartWait;
     }
+    #endregion
 
+    #region [ Calibrating ]
     private IEnumerator Calibrating()
     {
         m_Robot.State = PlayerState.Calibration;
@@ -118,6 +129,7 @@ public class GameManager : MonoBehaviour
         m_Robot.State = PlayerState.Playing;
         m_GameState = GameState.Playing;
     }
+    #endregion
 
     private IEnumerator Playing()
     {
@@ -129,26 +141,56 @@ public class GameManager : MonoBehaviour
             m_Spawner.ViewportRelativeSpawn(task, m_Player.position);
             m_TargetInGame = true;
 
+            float time = 0.0f;
             while (m_TargetInGame)
-                yield return null;
+            {
+                if (Mathf.Abs(m_PlayerMovement.Speed) <= 1.0f)
+                    time += Time.deltaTime;
 
-            m_TaskManager.EvaluationFitness(0.0f, 0.0f);
+                yield return null;
+            }
+
+            float error;
+            if (m_CapturedTarget)
+            {
+                error = 0.0f;
+                time = time / m_Spawner.TimeToFall;
+            }
+            else
+            {
+                error = Mathf.Abs(m_Player.position.x - m_Spawner.CurrentTargetPosition.x);
+                time = 0.0f;
+            }
+
+            Debug.Log(string.Format("Error {0} and Time {1}", error, time));
+            m_TaskManager.EvaluationFitness(error, time);
 
         } while (!IsFinish());
     }
 
+    #region [ Ending ]
     private IEnumerator Ending()
     {
         m_EndTime = Time.time;
-        m_StatsManager.SetScore(100.0f * m_Score.Point / m_Score.Targets, ArrowType.Up);
-        m_StatsManager.SetTime(Mathf.RoundToInt(m_EndTime - m_StartTime), ArrowType.Up);
-        //m_StatsManager.SetSkill(string.Format("{0:0.0}",m_TaskManager.Skill), ArrowType.Up);
-        //m_StatsManager.SetDifficulty(string.Format("{0:0.0}", m_TaskManager.Difficulty), ArrowType.Up);
+
+        float score = 100.0f * m_Score.Point / m_Score.Targets;
+        m_StatsManager.SetScore(string.Format("{0:0.00}", score), ArrowType.Up);
+
+        float time = m_EndTime - m_StartTime;
+        m_StatsManager.SetTime(string.Format("{0:0}", time), ArrowType.Up);
+
+        float difficulty = m_TaskManager.Difficulty(m_NumberOfTargets);
+        m_StatsManager.SetDifficulty(string.Format("{0:0.00}", difficulty), ArrowType.Up);
+
+        float flow = difficulty / score * 100.0f;
+        m_StatsManager.SetSkill(string.Format("{0:0.00}", flow), ArrowType.Up);
+        
         //m_StatsManager.SetRobotInit(m_TaskManager.RobotInit, ArrowType.Up);
         m_Gameover.Show();
         SessionManager.Instance.SaveSession();
         yield return m_EndWait;
     }
+    #endregion
 
     private bool IsFinish()
     {
@@ -157,6 +199,7 @@ public class GameManager : MonoBehaviour
 
     public void NextTarget(bool captured)
     {
+        m_CapturedTarget = captured;
         m_TargetInGame = false;
 
         if (m_GameState == GameState.Calibrating)
@@ -176,12 +219,6 @@ public class GameManager : MonoBehaviour
     {
         return true;
     }
-}
-
-public enum GameplayState
-{
-    Calibrating,
-    Playing
 }
 
 [Serializable]

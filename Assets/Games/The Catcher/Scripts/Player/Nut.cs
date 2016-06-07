@@ -15,6 +15,7 @@ public class Nut : MonoBehaviour
     private Transform m_Transform;
     private Quaternion m_OriginalRotate;
     private GameManager m_GameManager;
+    private Vector3 m_Size;
 
     private bool m_IsFalling = true;
 
@@ -23,6 +24,8 @@ public class Nut : MonoBehaviour
         get { return m_Speed; }
         set { m_Speed = value; }
     }
+
+    private float m_Time = 0.0f;
 
     private void Awake()
     {
@@ -38,6 +41,7 @@ public class Nut : MonoBehaviour
     {
         m_GameManager = FindObjectOfType<GameManager>();
         m_OriginalRotate = m_Transform.rotation;
+        m_Size = m_Collider.bounds.size.y * m_Transform.lossyScale;
     }
 
     private void OnEnable()
@@ -46,18 +50,24 @@ public class Nut : MonoBehaviour
         m_Collider.enabled = true;
         m_Animator.SetBool("InGround", false);
         m_Rigidbody.constraints = RigidbodyConstraints.FreezePositionZ;
+        m_Time = Time.time;
     }
 
     private void FixedUpdate()
     {
         if (m_IsFalling)
+        {
             m_Rigidbody.velocity = Vector3.down * m_Speed;
+            m_Rigidbody.AddForce(-Physics.gravity, ForceMode.Acceleration);
+        }
     }
 
     private void OnCollisionEnter(Collision other)
     {
         if (other.gameObject.CompareTag("Ground"))
         {
+            Debug.Log("Nut fall time: " + (Time.time - m_Time) + " seconds");
+
             m_Transform.rotation = m_OriginalRotate;
             m_AudioSource.clip = m_CollidedGroundAudioClip;
             m_AudioSource.Play();
@@ -91,5 +101,10 @@ public class Nut : MonoBehaviour
     private void Disappear()
     {
         gameObject.SetActive(false);
+    }
+
+    public Vector3 Size
+    {
+        get { return m_Size; }
     }
 }

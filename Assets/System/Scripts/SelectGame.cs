@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class SelectGame : MonoBehaviour
 {
-    public string m_SceneName;
+    public int m_SceneNumber = 4;
     private Button m_Button;
 
 	private void Start ()
@@ -53,6 +53,6 @@ public class SelectGame : MonoBehaviour
         SessionManager.Instance.NewPerformance();
         SessionManager.Instance.NewTasks();
         SessionManager.Instance.NewSession();
-        SceneManager.LoadScene(m_SceneName);
+        LoadingScreenManager.LoadScene(m_SceneNumber);
     }
 }

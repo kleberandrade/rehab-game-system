@@ -13,6 +13,8 @@ public class DynamicDifficulty : MonoBehaviour
     public int m_NumberOfTasks = 5;
     private List<Task> m_Tasks = new List<Task>();
     private int m_IndexOfTask = 0;
+
+    private float m_Difficulty = 0.0f;
     #endregion
 
     public void InitializeRandomTasks()
@@ -74,8 +76,15 @@ public class DynamicDifficulty : MonoBehaviour
         m_Tasks[m_IndexOfTask].Error = error;
         m_Tasks[m_IndexOfTask].Time = time;
         m_IndexOfTask++;
-                
+
+        m_Difficulty = (m_Tasks[m_IndexOfTask].Distance + m_Tasks[m_IndexOfTask].Speed) / 2.0f;
+
         if (m_IndexOfTask > m_Tasks.Count - 1)
             NextPopulation();
+    }
+
+    public float Difficulty(int numberOfTargets)
+    {
+        return 100.0f * m_Difficulty / numberOfTargets ;
     }
 }

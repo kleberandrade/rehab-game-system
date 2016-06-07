@@ -89,6 +89,11 @@ public class PlayerMovement : MonoBehaviour
         m_Animator.SetBool("IsWalking", m_IsWalking);
     }
 
+    public float Speed
+    {
+        get { return m_Speed; }
+    }
+
     private void FootStepAudio()
     {
         if (m_IsWalking)

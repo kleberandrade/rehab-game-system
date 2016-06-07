@@ -27,9 +27,9 @@ public class Gameover : MonoBehaviour
         m_Fade.Fade(true, 1.0f, 0.0f);
     }
     
-    public void Close()
+    private void Close()
     {
         m_AudioSource.Play();
-        SceneManager.LoadScene("Hub");
+        LoadingScreenManager.LoadScene(3);
     }
 }

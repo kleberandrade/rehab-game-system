@@ -9,6 +9,10 @@ public class Spawner : MonoBehaviour
     private Transform m_Transform;
     private WindWord m_WindWorld;
     private float m_Height;
+    private MoveBox m_MoveBox;
+
+    private Vector3 m_CurrentTargetPosition;
+    private float m_TimeToFall;
 
     private void Awake()
     {
@@ -20,14 +24,15 @@ public class Spawner : MonoBehaviour
 
 	private void Start ()
     {
+        m_MoveBox = FindObjectOfType<MoveBox> ();
         m_Particles.playOnAwake = false;
         m_Particles.loop = false;
 
         Vector3 myPosition = m_Transform.position;
-        myPosition.y = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, GameManager.Parameters.DepthScreen)).y + 1.0f;
+        myPosition.y = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, GameManager.Parameters.DepthScreen)).y;
         m_Transform.position = myPosition;
 
-        m_Height = Mathf.Abs(GameManager.Parameters.Top - GameManager.Parameters.Bottom);
+        m_Height = Mathf.Abs(m_Transform.position.y - m_MoveBox.m_Player.position.y);
     }
 
     public void Spawn()
@@ -37,6 +42,7 @@ public class Spawner : MonoBehaviour
 
     public void Spawn(Vector3 position)
     {
+        m_CurrentTargetPosition = position;
         m_Transform.position = position;
         StartCoroutine(SpawningAtPosition());
     }
@@ -57,10 +63,13 @@ public class Spawner : MonoBehaviour
         m_Particles.Play();
         m_WindWorld.Fan();
         yield return new WaitForSeconds(m_TimeToSpawning);
+
         GameObject go = m_ObjectPooler.NextObject();
         go.transform.position = position;
         go.GetComponent<Nut>().Speed = speed;
         go.SetActive(true);
+
+        m_MoveBox.Execute(new Vector3(position.x, m_MoveBox.m_Player.position.y + 1.0f, position.z), (m_Height - 0.8f) / speed);
     }
 
     public void ViewportAbsoluteSpawn(Task task)
@@ -71,7 +80,9 @@ public class Spawner : MonoBehaviour
             GameManager.Parameters.RightScreen,
             GameManager.Parameters.DepthScreen);
 
-        float speed = (m_Height * GameManager.Parameters.MinSpeed) + task.Speed * (m_Height * GameManager.Parameters.MaxSpeed);
+        float speed = (m_Height * GameManager.Parameters.MinSpeed) + task.Speed * (m_Height * GameManager.Parameters.MaxSpeed - m_Height * GameManager.Parameters.MinSpeed);
+        m_TimeToFall = m_Height / speed;
+
         StartCoroutine(SpawningAtPosition(myPosition, speed));
     }
 
@@ -101,10 +112,21 @@ public class Spawner : MonoBehaviour
             GameManager.Parameters.DepthScreen);
 
         // Define a velocidade do alvo
-        float speed = (m_Height * GameManager.Parameters.MinSpeed) + task.Speed * (m_Height * GameManager.Parameters.MaxSpeed);
+        float speed = (m_Height * GameManager.Parameters.MinSpeed) + task.Speed * (m_Height * GameManager.Parameters.MaxSpeed - m_Height * GameManager.Parameters.MinSpeed);
+        m_TimeToFall = m_Height / speed;
 
         // Lança o alvo
         StartCoroutine(SpawningAtPosition(myPosition, speed));
+    }
+
+    public Vector3 CurrentTargetPosition
+    {
+        get { return m_CurrentTargetPosition; }
+    }
+
+    public float TimeToFall
+    {
+        get { return m_TimeToFall; }
     }
 
 }

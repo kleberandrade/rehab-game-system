@@ -18,6 +18,8 @@ public class RehabNetGamePackage : IRehabNetPackage
     public double Setpoint { get; set; }
     public double Stiffness { get; set; }
     public double Damping { get; set; }
+    public double Left { get; set; }
+    public double Right { get; set; }
 
     public RehabNetGamePackage()
     {
@@ -29,12 +31,14 @@ public class RehabNetGamePackage : IRehabNetPackage
         Decode(data);
     }
 
-    public RehabNetGamePackage(int control, double setpoint, double stiffness, double damping)
+    public RehabNetGamePackage(int control, double setpoint, double stiffness, double damping, double left, double right)
     {
         Control = control;
         Setpoint = setpoint;
         Stiffness = stiffness;
         Damping = damping;
+        Left = left;
+        Right = right;
     }
 
     public void Decode(byte[] data)
@@ -43,6 +47,8 @@ public class RehabNetGamePackage : IRehabNetPackage
         Setpoint = BitConverter.ToDouble(data, 4);
         Stiffness = BitConverter.ToDouble(data, 12);
         Damping = BitConverter.ToDouble(data, 20);
+        Left = BitConverter.ToDouble(data, 28);
+        Right = BitConverter.ToDouble(data, 36);
     }
 
     public byte[] Encode()
@@ -52,16 +58,20 @@ public class RehabNetGamePackage : IRehabNetPackage
         buffer.AddRange(BitConverter.GetBytes(Setpoint));
         buffer.AddRange(BitConverter.GetBytes(Stiffness));
         buffer.AddRange(BitConverter.GetBytes(Damping));
+        buffer.AddRange(BitConverter.GetBytes(Left));
+        buffer.AddRange(BitConverter.GetBytes(Right));
         return buffer.ToArray();
     }
 
     public override string ToString()
     {
-        return string.Format("Control: {0}\nSetpoint: {1}\nStiffness: {2}\nDamping: {3}", 
+        return string.Format("Control: {0}\nSetpoint: {1}\nStiffness: {2}\nDamping: {3}\nLeft: {3}\nRight: {3}", 
             (RehabNetGameControl)Control,
             Setpoint,
             Stiffness,
-            Damping);
+            Damping,
+            Left,
+            Right);
     }
 }
 #endregion
