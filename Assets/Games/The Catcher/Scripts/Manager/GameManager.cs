@@ -93,7 +93,7 @@ public class GameManager : MonoBehaviour
     {
         yield return StartCoroutine(Starting());
         yield return StartCoroutine(Calibrating());
-        //SessionManager.Instance.NewSession();
+        SessionManager.Instance.NewSession();
         yield return StartCoroutine(Playing());
         yield return StartCoroutine(Ending());
     }

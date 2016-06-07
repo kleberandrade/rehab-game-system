@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class RehabNetManager : Singleton<RehabNetManager>
 {
@@ -15,18 +16,20 @@ public class RehabNetManager : Singleton<RehabNetManager>
     {
         m_Connection = GameObject.Find("RehabNetManager").GetComponent<RehabNetConnection>();
         m_Connection.Connect();
-        InvokeRepeating("SendToNetwork", 1.0f, 0.002f);
+        StartCoroutine(SendToNetwork());
     }
 
-    private void SendToNetwork()
+    private IEnumerator SendToNetwork()
     {
+        yield return null;
+
         if (m_Connection.IsConnected)
             m_Connection.Send(m_Connection.GamePackage);
     }
 
     private void OnApplicationQuit()
     {
-        //Debug.Log("Close connection");
+        StopCoroutine(SendToNetwork());
         m_Connection.Close();
     }
 }

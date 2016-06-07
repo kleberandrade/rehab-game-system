@@ -57,7 +57,7 @@ RenderSettings:
   m_FogDensity: 0.01
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.7398897, g: 0.8455882, b: 0.7623995, a: 1}
+  m_AmbientSkyColor: {r: 0.9802231, g: 1, b: 0.8897059, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
@@ -79,7 +79,7 @@ LightmapSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 6
   m_GIWorkflowMode: 1
-  m_LightmapsMode: 1
+  m_LightmapsMode: 0
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -1052,11 +1052,11 @@ GameObject:
   m_Component:
   - 4: {fileID: 252252499}
   - 114: {fileID: 252252497}
-  - 198: {fileID: 252252501}
   - 199: {fileID: 252252500}
   - 114: {fileID: 252252503}
-  - 82: {fileID: 252252502}
   - 114: {fileID: 252252498}
+  - 198: {fileID: 252252501}
+  - 82: {fileID: 252252502}
   m_Layer: 0
   m_Name: SpawnerManager
   m_TagString: Untagged
@@ -2668,7 +2668,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1e6dc3d676d26046a2a995a2d38bd6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_NormalPeriodOscillator: 2
+  m_NormalPeriodOscillator: 1
   m_NormalAmplitudeOscillator: 1
   m_PeriodOscillator: 35
   m_AmplitudeOscillator: 3
@@ -2998,6 +2998,18 @@ Prefab:
     - target: {fileID: 11431772, guid: 1e425442549871e41b482e87c3c81f1b, type: 2}
       propertyPath: m_Value
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22465750, guid: 1e425442549871e41b482e87c3c81f1b, type: 2}
+      propertyPath: m_LocalScale.x
+      value: 0.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 22465750, guid: 1e425442549871e41b482e87c3c81f1b, type: 2}
+      propertyPath: m_LocalScale.y
+      value: 0.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 22465750, guid: 1e425442549871e41b482e87c3c81f1b, type: 2}
+      propertyPath: m_LocalScale.z
+      value: 0.9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1e425442549871e41b482e87c3c81f1b, type: 2}

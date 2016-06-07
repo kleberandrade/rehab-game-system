@@ -46,6 +46,8 @@ public class RobotPlayerMovement : MonoBehaviour
             GameManager.Parameters.DepthScreen);
 
         m_PlayerMovement.HorizontalMovement(m_Horizontal);
+
+
 	}
 
     public PlayerState State
