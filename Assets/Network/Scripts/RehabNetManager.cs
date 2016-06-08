@@ -10,18 +10,17 @@ public class RehabNetManager : Singleton<RehabNetManager>
         get { return m_Connection; }
     }
 
-    public float m_RepeatRate = 0.002f;
+    private float m_RepeatRate = 0.002f;
 
     private void Start()
     {
         m_Connection = GameObject.Find("RehabNetManager").GetComponent<RehabNetConnection>();
         m_Connection.Connect();
-        StartCoroutine(SendToNetwork());
+        InvokeRepeating("SendToNetwork", 1.0f, m_RepeatRate); // Delay necessary for communication. Coroutine + Delay did't work.
     }
 
-    private IEnumerator SendToNetwork()
+    void SendToNetwork()
     {
-        yield return null;
 
         if (m_Connection.IsConnected)
             m_Connection.Send(m_Connection.GamePackage);
@@ -29,7 +28,7 @@ public class RehabNetManager : Singleton<RehabNetManager>
 
     private void OnApplicationQuit()
     {
-        StopCoroutine(SendToNetwork());
+        CancelInvoke("SendToNetwork");
         m_Connection.Close();
     }
 }
