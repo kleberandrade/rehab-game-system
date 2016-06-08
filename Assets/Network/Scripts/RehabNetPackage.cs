@@ -65,7 +65,7 @@ public class RehabNetGamePackage : IRehabNetPackage
 
     public override string ToString()
     {
-        return string.Format("Control: {0}\nSetpoint: {1}\nStiffness: {2}\nDamping: {3}\nLeft: {3}\nRight: {3}", 
+        return string.Format("Control: {0}\nSetpoint: {1}\nStiffness: {2}\nDamping: {3}\nLeft: {4}\nRight: {5}", 
             (RehabNetGameControl)Control,
             Setpoint,
             Stiffness,
