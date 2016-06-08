@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.CrashLog;
-using UnityEngine.SceneManagement;
 
 public class Splash : MonoBehaviour
 {

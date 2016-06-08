@@ -15,7 +15,8 @@ public class SelectGame : MonoBehaviour
 	}
 	
 	private void Select ()
-    {/*
+    {
+        /*
 	    if (!RehabNetManager.Instance.Connection.IsConnected)
         {
             SystemDialogBox.Instance.Show(
@@ -23,8 +24,11 @@ public class SelectGame : MonoBehaviour
                 "Por favor verifique a conexão com o robô",
                 new string[] { "Fechar" },
                 new UnityAction[] { null });
+
+            return;
         }
-        else if (SessionManager.Instance.IsHoming)
+
+        if (SessionManager.Instance.IsHoming)
         {
             SystemDialogBox.Instance.Show(
                 "Erro de callibração",

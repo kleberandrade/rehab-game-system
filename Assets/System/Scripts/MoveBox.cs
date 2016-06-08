@@ -54,6 +54,9 @@ public class MoveBox : MonoBehaviour
         m_MinScreen = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, m_Depth));
         m_MaxScreen = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, m_Depth));
 
+        RehabNetManager.Instance.Connection.GamePackage.Left = -90.0f;
+        RehabNetManager.Instance.Connection.GamePackage.Right = 90.0f;
+
         Reset();
     }
 
@@ -87,6 +90,9 @@ public class MoveBox : MonoBehaviour
 
         m_RobotBottom = (m_MinViewport.y - m_VPadding) / ((1.0f - m_VPadding) - m_VPadding);
         m_RobotBottom = m_PlayerBottom + (m_PlayerTop - m_PlayerBottom) * m_RobotBottom;
+
+        RehabNetManager.Instance.Connection.GamePackage.Left = m_RobotLeft;
+        RehabNetManager.Instance.Connection.GamePackage.Right = m_RobotRight;
     }
 
     public void Execute(Vector3 target, float time)

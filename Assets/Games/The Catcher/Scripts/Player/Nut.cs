@@ -62,19 +62,20 @@ public class Nut : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter(Collision other)
+    private void OnCollisionStay(Collision other)
     {
         if (other.gameObject.CompareTag("Ground"))
         {
-            Debug.Log("Nut fall time: " + (Time.time - m_Time) + " seconds");
+            m_Collider.enabled = false;
+            m_IsFalling = false;
 
             m_Transform.rotation = m_OriginalRotate;
             m_AudioSource.clip = m_CollidedGroundAudioClip;
             m_AudioSource.Play();
-            m_IsFalling = false;
-            m_Collider.enabled = false;
+            
             m_Rigidbody.constraints = RigidbodyConstraints.FreezeAll;
             m_Animator.SetBool("InGround", true);
+
             StartCoroutine(Destroy());
         }
     }

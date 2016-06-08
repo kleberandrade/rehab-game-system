@@ -20,6 +20,17 @@ public class ShutDown : MonoBehaviour
         m_ShutDownButton.onClick.AddListener(delegate { ShowMessage(); });
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (SystemDialogBox.Instance.IsShow)
+                SystemDialogBox.Instance.Hide();
+            else
+                ShowMessage();
+        }
+    }
+
     private void ShowMessage()
     {
         m_AudioSource.Play();

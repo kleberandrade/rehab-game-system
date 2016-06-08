@@ -197,4 +197,6 @@ public class RehabNetConnection : MonoBehaviour
         m_RehabNetState = RehabNetState.Disconnecting;
         m_SendGamePackage.Control = (int)RehabNetGameControl.Disconnect;
     }
+
+
 }

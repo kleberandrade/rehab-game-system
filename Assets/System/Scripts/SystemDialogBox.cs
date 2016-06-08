@@ -18,6 +18,15 @@ public class SystemDialogBox : Singleton<SystemDialogBox>
 
     private ShowAndHidePanel m_Transition;
 
+    private bool m_IsShow;
+
+    public bool IsShow
+    {
+        get { return m_IsShow; }
+        set { m_IsShow = value; }
+    }
+
+
     private void Start()
     {
         m_Transition = GetComponent<ShowAndHidePanel>();
@@ -48,6 +57,7 @@ public class SystemDialogBox : Singleton<SystemDialogBox>
 
     public void Show(string title, string message, string[] textButtons, UnityAction[] actionEvents)
     {
+        m_IsShow = true;
         m_Title.text = title;
         m_Message.text = message;
 
@@ -76,6 +86,7 @@ public class SystemDialogBox : Singleton<SystemDialogBox>
 
     public void Hide()
     {
+        m_IsShow = false;
         StartCoroutine(m_Transition.Fade(false, m_CanvasGroup, new RectTransform[] { m_FaderPanel, m_MessagePanel }));
     }
 }

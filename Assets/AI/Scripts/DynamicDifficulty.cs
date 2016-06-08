@@ -75,9 +75,9 @@ public class DynamicDifficulty : MonoBehaviour
     {
         m_Tasks[m_IndexOfTask].Error = error;
         m_Tasks[m_IndexOfTask].Time = time;
-        m_IndexOfTask++;
-
         m_Difficulty = (m_Tasks[m_IndexOfTask].Distance + m_Tasks[m_IndexOfTask].Speed) / 2.0f;
+
+        m_IndexOfTask++;
 
         if (m_IndexOfTask > m_Tasks.Count - 1)
             NextPopulation();
