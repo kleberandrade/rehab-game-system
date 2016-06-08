@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ShowAndHidePanel : MonoBehaviour
 {
-    private float m_FadeTime = 0.4f;
+    private float m_FadeTime = 0.25f;
     private bool m_IsFading = false;
 
     public IEnumerator Fade(bool fadeIn, CanvasGroup canvasGroup, RectTransform[] panels)
@@ -21,7 +21,8 @@ public class ShowAndHidePanel : MonoBehaviour
         while (progress < 1.0)
         {
             canvasGroup.alpha = Mathf.Lerp(startAlpha, endAlpha, progress);
-            progress += rate * Time.deltaTime;
+            progress += rate * Time.fixedDeltaTime;
+            
             yield return null;
         }
 

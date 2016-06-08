@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 
 public class RobotPlayerMovement : MonoBehaviour
 {
@@ -12,11 +13,79 @@ public class RobotPlayerMovement : MonoBehaviour
     [Range(-90.0f, 90.0f)]
     public double m_RobotAngle = 0.0f;
     private float m_Horizontal;
+    private bool m_Pause = false;
+    private bool m_Error = false;
 
     private void Start ()
     {
         m_PlayerMovement = GetComponent<PlayerMovement>();
 	}
+
+    private void Update()
+    {
+        if (RehabNetManager.Instance.Connection.IsConnected)
+        {
+            if (RehabNetManager.Instance.Connection.RobotPackage.Status == (int)RehabNetRobotStatus.Error && !m_Error)
+            {
+                Time.timeScale = 0.0f;
+
+                SystemDialogBox.Instance.Show(
+                    "Erro",
+                    "O robô apresenta erro. Deseja encerrar o jogo?",
+                    new string[] { "Encerrar" },
+                    new UnityAction[] { new UnityAction(Close) });
+
+                m_Error = true;
+            }
+
+            if (RehabNetManager.Instance.Connection.RobotPackage.Status == (int)RehabNetRobotStatus.Running && m_Error)
+            {
+                m_Error = false;
+                Time.timeScale = 1.0f;
+                SystemDialogBox.Instance.Hide();
+            }
+        }
+
+        if (m_Error)
+            return;
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            m_Pause = !m_Pause;
+
+            if (m_Pause)
+            {
+                Time.timeScale = 1.0f - Time.timeScale;
+
+                SystemDialogBox.Instance.Show(
+                    "Pause",
+                    "Deseja continuar?",
+                    new string[] { "Continuar", "Fechar" },
+                    new UnityAction[] { new UnityAction(Continue), new UnityAction(Close) }
+                );
+            }
+            else
+            {
+                Continue();
+            }
+        }
+    }
+
+
+    private void Continue()
+    {
+        m_Pause = false;
+        Time.timeScale = 1.0f;
+        SystemDialogBox.Instance.Hide();
+    }
+
+    private void Close()
+    {
+        m_Pause = false;
+        Time.timeScale = 1.0f;
+        SystemDialogBox.Instance.Hide();
+        LoadingScreenManager.LoadScene(3);
+    }
 
     private void FixedUpdate()
     {

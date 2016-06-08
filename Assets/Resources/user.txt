@@ -4,3 +4,4 @@
 {"Name":"Caio Benatti Moretti","Username":"caio","Password":"123","TherapistName":"gabriela"}
 {"Name":"Teste","Username":"teste","Password":"teste","TherapistName":"gabriela"}
 {"Name":"teste","Username":"teste","Password":"teste","TherapistName":"gabriela"}
+{"Name":"demo","Username":"demo","Password":"demo","TherapistName":"gabriela"}
