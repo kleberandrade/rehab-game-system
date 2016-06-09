@@ -16,7 +16,6 @@ public class SelectGame : MonoBehaviour
 	
 	private void Select ()
     {
-        /*
 	    if (!RehabNetManager.Instance.Connection.IsConnected)
         {
             SystemDialogBox.Instance.Show(
@@ -28,24 +27,16 @@ public class SelectGame : MonoBehaviour
             return;
         }
 
-        if (SessionManager.Instance.IsHoming)
+        if (!SessionManager.Instance.IsHoming)
         {
             SystemDialogBox.Instance.Show(
                 "Erro de callibração",
                 "Por favor zere o centro do robô.",
-                new string[] { "Cancelar", "Zerar" },
+                new string[] { "Fechar", "Zerar" },
                 new UnityAction[] { null, new UnityAction(RehabNetManager.Instance.Connection.Home) });
+
+            return;
         }
-        else
-        {
-            
-            SystemDialogBox.Instance.Show(
-                 "Erro de callibração",
-                 "Por favor zere o centro do robô.",
-                 new string[] { "Cancelar", "Zerar", "Jogar" },
-                 new UnityAction[] { null, new UnityAction(RehabNetManager.Instance.Connection.Home), new UnityAction(ToPlay) });
-        }
-        */
 
         ToPlay();
     }

@@ -55,6 +55,8 @@ public class UsersDropdown : MonoBehaviour
 
     public void OnPatientChanged(int value)
     {
+        SessionManager.Instance.IsHoming = false;
+
         User patientSelected = SessionManager.Instance.GetPatientsByIndex(value);
         SessionManager.Instance.PatientSelected(patientSelected);
     }

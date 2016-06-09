@@ -155,10 +155,15 @@ public class RehabNetConnection : MonoBehaviour
             m_ReceiveRobotPackage.Decode(m_BufferRead);
 
             if (m_LastRehabNetRoboStatus == RehabNetRobotStatus.Homing && (RehabNetRobotStatus)m_ReceiveRobotPackage.Status == RehabNetRobotStatus.Running)
+            {
                 m_SendGamePackage.Control = (int)RehabNetGameControl.Running;
+                SessionManager.Instance.IsHoming = true;
+            }
 
             if (m_SendGamePackage.Control == (int)RehabNetGameControl.Disconnect)
+            {
                 Close();
+            }
 
             m_LastRehabNetRoboStatus = (RehabNetRobotStatus)m_ReceiveRobotPackage.Status;
         }
