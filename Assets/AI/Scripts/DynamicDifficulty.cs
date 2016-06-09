@@ -19,7 +19,7 @@ public class DynamicDifficulty : MonoBehaviour
 
     public void InitializeRandomTasks()
     {
-        Debug.Log("GA: Initialize random population...");
+        //Debug.Log("GA: Initialize random population...");
         for (int i = 0; i < m_NumberOfInitialTasks; i++)
             m_Tasks.Add(new Task(Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f)));
     }
@@ -27,14 +27,14 @@ public class DynamicDifficulty : MonoBehaviour
     public Task GetTask()
     {
         Task task = m_Tasks[m_IndexOfTask];
-        Debug.Log(string.Format("GA: Get chromosome({0:00}): {1}", m_IndexOfTask, task.ToString()));
+        Debug.Log(string.Format("GA: Get chromosome[{0}]: |{1:0.000}|{2:0.000}|", m_IndexOfTask, task.Distance, task.Speed));
         return task;
     }
 
     private void NextPopulation()
     {
         // Avalia a população
-        Debug.Log("GA: Evaluate fitness");
+        //Debug.Log("GA: Evaluate fitness");
         for (int i = 0; i < m_Tasks.Count; i++)
         {
             m_Tasks[i].EvaluateFitness(m_Kd, m_Ks, m_Ke, m_Kc);
@@ -44,15 +44,15 @@ public class DynamicDifficulty : MonoBehaviour
 
         // Seleciona o melhor alvo
         m_Tasks.Sort();
-        Debug.Log(string.Format("GA: Selection chromosome {0}", m_Tasks[0].ToString()));
         Task selectedTask = (Task)m_Tasks[m_Tasks.Count - 1].Clone();
-
+        Debug.Log(string.Format("GA: Selection chromosome {0}", selectedTask.ToString()));
+        
         // Criar a nova população
         m_Tasks.Clear();
         m_Tasks.Add(selectedTask);
 
         // Aplica o Crossover e Mutação
-        Debug.Log("GA: Crossover and mutation...");
+        //Debug.Log("GA: Crossover and mutation...");
         
         for (int i = 1; i < m_NumberOfTasks; i++)
         {
@@ -62,13 +62,13 @@ public class DynamicDifficulty : MonoBehaviour
             task.Error = 0.0f;
             task.Time = 0.0f;
             task.Fitness = 0.0f;
-            Debug.Log(string.Format("GA: generate new chromosome({0:00}): {0}", i, task.ToString()));
+            //Debug.Log(string.Format("GA: generate new chromosome({0:00}): {0}", i, task.ToString()));
             m_Tasks.Add(task);
         }
 
         m_IndexOfTask = 0;
 
-        Debug.Log("GA: New population...");
+        //Debug.Log("GA: New population...");
     }
 
     public void EvaluationFitness(float error, float time)

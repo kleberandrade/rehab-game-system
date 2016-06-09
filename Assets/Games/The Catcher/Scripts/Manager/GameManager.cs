@@ -47,7 +47,8 @@ public class GameManager : MonoBehaviour
         m_Gameover = FindObjectOfType<Gameover>();
         m_TextHint = FindObjectOfType<TextHint>();
         m_StatsManager = FindObjectOfType<StatsManager>();
-        m_Player = FindObjectOfType<PlayerMovement>().transform;
+        m_Player = FindObjectOfType<PlayerMovement>().gameObject.transform;
+
         m_Robot = FindObjectOfType<RobotPlayerMovement>();
         m_PlayerMovement = FindObjectOfType<PlayerMovement>();
         m_Spawner = FindObjectOfType<Spawner>();
@@ -84,7 +85,7 @@ public class GameManager : MonoBehaviour
         Parameters.Bottom = min.y;
         Parameters.Left = min.x;
         Parameters.Top = max.y;
-        Parameters.Right = min.x;
+        Parameters.Right = max.x;
     }
     #endregion
 
@@ -141,29 +142,33 @@ public class GameManager : MonoBehaviour
             m_Spawner.ViewportRelativeSpawn(task, m_Player.position);
             m_TargetInGame = true;
 
-            float time = 0.0f;
+            float userTime = 0.0f;
             while (m_TargetInGame)
             {
-                if (Mathf.Abs(m_PlayerMovement.Speed) <= 1.0f)
-                    time += Time.deltaTime;
+                if (Mathf.Abs(m_PlayerMovement.Speed) > 1.0f)
+                {
+                    Debug.Log(string.Format("Player in movement at {0} pixels/seconds", m_PlayerMovement.Speed));
+                    userTime += Time.deltaTime;
+                }
 
                 yield return null;
             }
 
+
+            Debug.Log(string.Format("User time is {0} seconds", userTime));
             float error;
             if (m_CapturedTarget)
             {
                 error = 0.0f;
-                time = time / m_Spawner.TimeToFall;
+                userTime = userTime / m_Spawner.TimeToFall;
             }
             else
             {
-                error = Mathf.Abs(m_Player.position.x - m_Spawner.CurrentTargetPosition.x);
-                time = 0.0f;
+                error = Mathf.Abs(m_Player.position.x - m_Spawner.CurrentTargetPosition.x) / Mathf.Abs(Parameters.Left - Parameters.Right);
+                userTime = 0.0f;
             }
 
-            Debug.Log(string.Format("Error {0} and Time {1}", error, time));
-            m_TaskManager.EvaluationFitness(error, time);
+            m_TaskManager.EvaluationFitness(error, userTime);
 
         } while (!IsFinish());
     }

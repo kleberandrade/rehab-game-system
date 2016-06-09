@@ -25,8 +25,6 @@ public class Nut : MonoBehaviour
         set { m_Speed = value; }
     }
 
-    private float m_Time = 0.0f;
-
     private void Awake()
     {
         m_Animator = GetComponentInChildren<Animator>();
@@ -50,7 +48,6 @@ public class Nut : MonoBehaviour
         m_Collider.enabled = true;
         m_Animator.SetBool("InGround", false);
         m_Rigidbody.constraints = RigidbodyConstraints.FreezePositionZ;
-        m_Time = Time.time;
     }
 
     private void FixedUpdate()

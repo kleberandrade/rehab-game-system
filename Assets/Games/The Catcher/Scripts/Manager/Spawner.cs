@@ -9,6 +9,7 @@ public class Spawner : MonoBehaviour
     private Transform m_Transform;
     private WindWord m_WindWorld;
     private float m_Height;
+    private float m_Width;
     private MoveBox m_MoveBox;
 
     private Vector3 m_CurrentTargetPosition;
@@ -42,7 +43,6 @@ public class Spawner : MonoBehaviour
 
     public void Spawn(Vector3 position)
     {
-        m_CurrentTargetPosition = position;
         m_Transform.position = position;
         StartCoroutine(SpawningAtPosition());
     }
@@ -69,7 +69,10 @@ public class Spawner : MonoBehaviour
         go.GetComponent<Nut>().Speed = speed;
         go.SetActive(true);
 
-        m_MoveBox.Execute(new Vector3(position.x, m_MoveBox.m_Player.position.y + 1.0f, position.z), (m_Height - 0.8f) / speed);
+        m_CurrentTargetPosition = new Vector3(position.x, m_MoveBox.m_Player.position.y + 1.0f, position.z);
+        //Debug.Log(string.Format("[Target] final position at {0}", m_CurrentTargetPosition.ToString()));
+
+        m_MoveBox.Execute(m_CurrentTargetPosition, (m_Height - 0.8f) / speed);
     }
 
     public void ViewportAbsoluteSpawn(Task task)
@@ -82,7 +85,7 @@ public class Spawner : MonoBehaviour
 
         float speed = (m_Height * GameManager.Parameters.MinSpeed) + task.Speed * (m_Height * GameManager.Parameters.MaxSpeed - m_Height * GameManager.Parameters.MinSpeed);
         m_TimeToFall = m_Height / speed;
-
+        //Debug.Log(string.Format("[ViewportAbsoluteSpawn] Time to fall: {0} segundos", m_TimeToFall));
         StartCoroutine(SpawningAtPosition(myPosition, speed));
     }
 
@@ -114,6 +117,7 @@ public class Spawner : MonoBehaviour
         // Define a velocidade do alvo
         float speed = (m_Height * GameManager.Parameters.MinSpeed) + task.Speed * (m_Height * GameManager.Parameters.MaxSpeed - m_Height * GameManager.Parameters.MinSpeed);
         m_TimeToFall = m_Height / speed;
+        //Debug.Log(string.Format("[ViewportRelativeSpawn] Time to fall: {0} segundos", m_TimeToFall));
 
         // Lança o alvo
         StartCoroutine(SpawningAtPosition(myPosition, speed));

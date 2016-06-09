@@ -542,11 +542,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81503b1427c148b44a37504a3946190d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Kd: 0.3483
-  m_Ks: 0.4679
-  m_Ke: 0.6692
-  m_Kc: 0.5319
-  m_MutationRate: 0.25
+  m_Kd: 0.3
+  m_Ks: 0.3
+  m_Ke: 1
+  m_Kc: 1
+  m_MutationRate: 0.2
   m_NumberOfInitialTasks: 20
   m_NumberOfTasks: 5
 --- !u!114 &24889609
