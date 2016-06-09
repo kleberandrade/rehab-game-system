@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class SelectGame : MonoBehaviour
 {
+    public string m_GameName = "The Catcher";
     public int m_SceneNumber = 4;
     private Button m_Button;
 
@@ -43,11 +43,12 @@ public class SelectGame : MonoBehaviour
 
     private void ToPlay()
     {
-        SessionManager.Instance.SetGame(new Game("The Catcher"));
+        SessionManager.Instance.SetGame(new Game(m_GameName));
         SessionManager.Instance.SetDevice(new Device("MORE-W"));
         SessionManager.Instance.NewPerformance();
         SessionManager.Instance.NewTasks();
         SessionManager.Instance.NewSession();
+
         LoadingScreenManager.LoadScene(m_SceneNumber);
     }
 }

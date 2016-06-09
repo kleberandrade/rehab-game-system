@@ -6,6 +6,8 @@ public class RehabNetUI : MonoBehaviour
     public Text m_StatusText;
     public Button m_Button;
     public InputField m_TargetNumberInputField;
+    public Text m_RobotPosition;
+    public Toggle m_RobotDirectionToggle;
 
     public void Start()
     {
@@ -23,13 +25,26 @@ public class RehabNetUI : MonoBehaviour
         SaveNumberOfGoal();
     }
 
+    private void Update()
+    {
+        if (RehabNetManager.Instance.Connection.IsConnected)
+            m_RobotPosition.text = string.Format("{0:0.000}", RehabNetManager.Instance.Connection.RobotPackage.Position);
+        else
+            m_RobotPosition.text = "-";
+    }
+
     private void UpdateStatus()
     {
         m_Button.interactable = RehabNetManager.Instance.Connection.IsConnected;
 
         if (RehabNetManager.Instance.Connection.IsConnected)
+        {
             m_StatusText.text = "Comunicando com o robô";
+
+        }
         else
+        {
             m_StatusText.text = "Estabelecendo conexão com o robô...";
+        }
     }
 }
