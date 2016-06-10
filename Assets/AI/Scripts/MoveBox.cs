@@ -45,6 +45,8 @@ public class MoveBox : MonoBehaviour
 
     private float m_ElapsedTime;
 
+    public float m_Stiffness, m_Damping;
+
     private void Start ()
     {
         if (m_Player == null)
@@ -104,9 +106,12 @@ public class MoveBox : MonoBehaviour
         m_RobotBottom = (m_MinViewport.y - m_VPadding) / ((1.0f - m_VPadding) - m_VPadding);
         m_RobotBottom = m_PlayerBottom + (m_PlayerTop - m_PlayerBottom) * m_RobotBottom;
 
-        RehabNetManager.Instance.Connection.GamePackage.Left = m_RobotLeft;
-        RehabNetManager.Instance.Connection.GamePackage.Right = m_RobotRight;
-    }
+        RehabNetManager.Instance.Connection.GamePackage.Setpoint = 0.0;
+        RehabNetManager.Instance.Connection.GamePackage.Stiffness = m_Stiffness;
+        RehabNetManager.Instance.Connection.GamePackage.Damping = m_Damping;
+        RehabNetManager.Instance.Connection.GamePackage.Right = -m_RobotRight;
+        RehabNetManager.Instance.Connection.GamePackage.Left = -m_RobotLeft;
+        }
 
     public void Execute(Vector3 target, float time)
     {
