@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour
     private PlayerMovement m_PlayerMovement;
     private TextHint m_TextHint;
     private StatsManager m_StatsManager;
+    private MoveBox m_MoveBox;
     private bool m_TargetInGame = false;
 
     private WaitForSeconds m_StartWait;
@@ -42,6 +43,7 @@ public class GameManager : MonoBehaviour
     #region [ Setup ]
     private void Start()
     {
+        m_MoveBox = FindObjectOfType<MoveBox>();
         m_Score = FindObjectOfType<Score>();        
         m_TaskManager = FindObjectOfType<DynamicDifficulty>();
         m_Gameover = FindObjectOfType<Gameover>();
@@ -138,6 +140,8 @@ public class GameManager : MonoBehaviour
         m_TaskManager.InitializeRandomTasks();
         do
         {
+            yield return new WaitForSeconds(m_MoveBox.m_BackTime);
+
             Task task = m_TaskManager.GetTask();
             m_Spawner.ViewportRelativeSpawn(task, m_Player.position);
             m_TargetInGame = true;

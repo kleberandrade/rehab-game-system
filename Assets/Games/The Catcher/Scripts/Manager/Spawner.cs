@@ -33,7 +33,8 @@ public class Spawner : MonoBehaviour
         myPosition.y = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, GameManager.Parameters.DepthScreen)).y;
         m_Transform.position = myPosition;
 
-        m_Height = Mathf.Abs(m_Transform.position.y - m_MoveBox.m_Player.position.y);
+        //m_Height = Mathf.Abs(m_Transform.position.y - m_MoveBox.m_Player.position.y);
+        m_Height = Mathf.Abs(GameManager.Parameters.Top - GameManager.Parameters.Bottom);
     }
 
     public void Spawn()

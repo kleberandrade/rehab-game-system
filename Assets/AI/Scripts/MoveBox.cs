@@ -6,13 +6,14 @@ public class MoveBox : MonoBehaviour
     public Vector3 m_Target;
     public Transform m_Player;
 
-    public float m_Time;
+    public float m_GoTime;
+    public float m_BackTime = 1.0f;
     [Range(0.0f, 1.0f)]
     public float m_DelayRate = 0.1f;
     public float m_Delay;
     
     private float m_StartTime;
-    private bool m_Enable;
+    private MoveBoxState m_State = MoveBoxState.None;
 
     public float m_HPadding = 0.1f;
     public float m_VPadding = 0.0f;
@@ -42,6 +43,8 @@ public class MoveBox : MonoBehaviour
     private Vector3 m_MinScreen;
     private Vector3 m_MaxScreen;
 
+    private float m_ElapsedTime;
+
     private void Start ()
     {
         if (m_Player == null)
@@ -56,8 +59,6 @@ public class MoveBox : MonoBehaviour
 
         RehabNetManager.Instance.Connection.GamePackage.Left = -90.0f;
         RehabNetManager.Instance.Connection.GamePackage.Right = 90.0f;
-
-        Reset();
     }
 
     private void Update()
@@ -66,15 +67,27 @@ public class MoveBox : MonoBehaviour
         DrawBox();
 #endif
 
-        if (!m_Enable)
+        if (m_State == MoveBoxState.None)
             return;
 
-        float time = (Time.time - m_StartTime) / m_Time;
+        if (m_State == MoveBoxState.Go)
+        {
+            m_ElapsedTime = (Time.time - m_StartTime) / m_GoTime;
 
-        m_CurrentLeft = Mathf.Lerp(m_Min.x, m_Target.x, time);
-        m_CurrentRight = Mathf.Lerp(m_Max.x, m_Target.x, time);
-        m_CurrentBottom = Mathf.Lerp(m_Min.y, m_Target.y, time);
-        m_CurrentTop = Mathf.Lerp(m_Max.y, m_Target.y, time);
+            m_CurrentLeft = Mathf.Lerp(m_Min.x, m_Target.x, m_ElapsedTime);
+            m_CurrentRight = Mathf.Lerp(m_Max.x, m_Target.x, m_ElapsedTime);
+            m_CurrentBottom = Mathf.Lerp(m_Min.y, m_Target.y, m_ElapsedTime);
+            m_CurrentTop = Mathf.Lerp(m_Max.y, m_Target.y, m_ElapsedTime);
+        }
+        else
+        {
+            m_ElapsedTime = (Time.time - m_StartTime) / m_BackTime;
+
+            m_CurrentLeft = Mathf.Lerp(m_Target.x, m_Min.x, m_ElapsedTime);
+            m_CurrentRight = Mathf.Lerp(m_Target.x, m_Max.x, m_ElapsedTime);
+            m_CurrentBottom = Mathf.Lerp(m_Target.y, m_Min.y, m_ElapsedTime);
+            m_CurrentTop = Mathf.Lerp(m_Target.y, m_Max.y, m_ElapsedTime);
+        }
 
         m_MinViewport = Camera.main.WorldToViewportPoint(new Vector3(m_CurrentLeft, m_CurrentBottom, 0.0f));
         m_MaxViewport = Camera.main.WorldToViewportPoint(new Vector3(m_CurrentRight, m_CurrentTop, 0.0f));
@@ -101,7 +114,7 @@ public class MoveBox : MonoBehaviour
 
         m_Target = target;
         m_Delay = time * m_DelayRate;
-        m_Time = time - m_Delay;
+        m_GoTime = time - m_Delay;
         
         StartCoroutine(Executing());
     }
@@ -109,9 +122,19 @@ public class MoveBox : MonoBehaviour
     private IEnumerator Executing()
     {
         yield return new WaitForSeconds(m_Delay);
+
+        m_ElapsedTime = 0.0f;
         m_StartTime = Time.time;
-        m_Enable = true;
-        yield return new WaitForSeconds(m_Time);
+        m_State = MoveBoxState.Go;
+        yield return new WaitForSeconds(m_GoTime);
+
+        yield return new WaitForSeconds(m_BackTime * 0.1f);
+
+        m_ElapsedTime = 0.0f;
+        m_StartTime = Time.time;
+        m_State = MoveBoxState.Back;
+        yield return new WaitForSeconds(m_BackTime * 0.9f);
+
         Reset();
     }
 
@@ -121,7 +144,7 @@ public class MoveBox : MonoBehaviour
         m_CurrentRight = m_Max.x;
         m_CurrentBottom = m_Min.y;
         m_CurrentTop = m_Max.y;
-        m_Enable = false;
+        m_State = MoveBoxState.None;
     }
 
     private void DrawBox()
@@ -144,4 +167,11 @@ public class MoveBox : MonoBehaviour
         Debug.DrawLine(new Vector3(m_CurrentRight, m_CurrentTop, m_Player.position.z), new Vector3(m_CurrentRight, m_CurrentBottom, m_Player.position.z), Color.blue);
         Debug.DrawLine(new Vector3(m_CurrentRight, m_CurrentBottom, m_Player.position.z), new Vector3(m_CurrentLeft, m_CurrentBottom, m_Player.position.z), Color.blue);
     }
+}
+
+public enum MoveBoxState
+{
+    None,
+    Go,
+    Back
 }

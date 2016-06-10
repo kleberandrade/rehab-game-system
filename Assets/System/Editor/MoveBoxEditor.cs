@@ -12,7 +12,7 @@ public class MoveBoxEditor : Editor
 
         if (GUILayout.Button("Execute"))
         {
-            script.Execute(script.m_Target, script.m_Time);
+            script.Execute(script.m_Target, script.m_GoTime);
         }
     }
 }
