@@ -92,4 +92,9 @@ public class Helper
 
         return list;
     }
+
+    public static float Point2Line(float x, float y, float a, float b, float c)
+    {
+        return Mathf.Abs(a * x + b * y + c) / Mathf.Sqrt(Mathf.Pow(a,2) + Mathf.Pow(b,2));
+    }
 }

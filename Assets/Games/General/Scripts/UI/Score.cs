@@ -10,6 +10,7 @@ public class Score : MonoBehaviour
     private int m_CurrentTarget;
     private int m_Point;
     private int m_NumberOfTargets;
+    private RectTransform m_RectTransform;
 
     public int Point
     {
@@ -23,6 +24,7 @@ public class Score : MonoBehaviour
 
     private void Awake()
     {
+        m_RectTransform = GetComponent<RectTransform>();
         m_Slider = GetComponent<Slider>();
         m_Text = GetComponentInChildren<Text>();
         m_Fade = GetComponentInChildren<FadeInOut>();
@@ -60,5 +62,13 @@ public class Score : MonoBehaviour
     {
         m_Slider.value = Mathf.Min(m_CurrentTarget, m_NumberOfTargets);
         m_Text.text = m_Point.ToString();
+    }
+
+    public Vector3 WorldPoint(Vector3 targetPosition)
+    {
+        float distance = Mathf.Abs(Camera.main.transform.position.z - targetPosition.z);
+        Vector3 position = m_RectTransform.position + new Vector3(1.0f, -20.0f, 0.0f);
+        position.z = distance;
+        return Camera.main.ScreenToWorldPoint(position);
     }
 }

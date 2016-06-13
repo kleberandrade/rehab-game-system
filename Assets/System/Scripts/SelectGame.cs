@@ -15,7 +15,7 @@ public class SelectGame : MonoBehaviour
 	}
 	
 	private void Select ()
-    {
+    {/*
 	    if (!RehabNetManager.Instance.Connection.IsConnected)
         {
             SystemDialogBox.Instance.Show(
@@ -37,7 +37,7 @@ public class SelectGame : MonoBehaviour
 
             return;
         }
-
+        */
         ToPlay();
     }
 

@@ -4,8 +4,8 @@ using System.Collections;
 [RequireComponent(typeof(AudioSource))]
 public class Nut : MonoBehaviour 
 {
-    public AudioClip m_CollidedGroundAudioClip;
-    public AudioClip m_CollidedPlayerAudioClip;
+    public AudioClip m_GroundAudioClip;
+    public AudioClip m_CapturedAudioClip;
     public float m_Speed = 0.5f;
 
     private Animator m_Animator;
@@ -16,6 +16,8 @@ public class Nut : MonoBehaviour
     private Quaternion m_OriginalRotate;
     private GameManager m_GameManager;
     private Vector3 m_Size;
+    private Score m_Score;
+    private TrailRenderer m_Trail;
 
     private bool m_IsFalling = true;
 
@@ -33,10 +35,12 @@ public class Nut : MonoBehaviour
         m_AudioSource = GetComponent<AudioSource>();
         m_Collider = GetComponent<Collider>();
         m_Transform = GetComponent<Transform>();
+        m_Trail = GetComponentInChildren<TrailRenderer>();
     }
 
     private void Start()
     {
+        m_Score = FindObjectOfType<Score>();
         m_GameManager = FindObjectOfType<GameManager>();
         m_OriginalRotate = m_Transform.rotation;
         m_Size = m_Collider.bounds.size.y * m_Transform.lossyScale;
@@ -63,11 +67,13 @@ public class Nut : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Ground"))
         {
+            m_Trail.Reset(this);
+
             m_Collider.enabled = false;
             m_IsFalling = false;
 
             m_Transform.rotation = m_OriginalRotate;
-            m_AudioSource.clip = m_CollidedGroundAudioClip;
+            m_AudioSource.clip = m_GroundAudioClip;
             m_AudioSource.Play();
             
             m_Rigidbody.constraints = RigidbodyConstraints.FreezeAll;
@@ -83,26 +89,47 @@ public class Nut : MonoBehaviour
         m_Rigidbody.constraints = RigidbodyConstraints.None;
         yield return new WaitForSeconds(0.5f);
         m_GameManager.NextTarget(false);
-        Disappear();
+        StartCoroutine(Disappear());
     }
 
     public void Captured()
     {
+        m_AudioSource.clip = m_CapturedAudioClip;
+        m_AudioSource.Play();
+
+        m_Transform.position = m_Transform.position - Vector3.up * 1.0f;
         m_Transform.rotation = m_OriginalRotate;
         m_IsFalling = false;
         m_Collider.enabled = false;
         m_Rigidbody.constraints = RigidbodyConstraints.FreezeAll;
         m_GameManager.NextTarget(true);
-        Disappear();
+        StartCoroutine(NavigationToScore());
     }
 
-    private void Disappear()
+    private IEnumerator Disappear()
     {
+        m_Trail.Reset(this);
+        yield return new WaitForEndOfFrame();
         gameObject.SetActive(false);
     }
 
     public Vector3 Size
     {
         get { return m_Size; }
+    }
+
+    private IEnumerator NavigationToScore()
+    {
+        float capturedTime = Time.time;
+        Vector3 capturedPosition = m_Transform.position;
+        Vector3 scorePosition = m_Score.WorldPoint(m_Transform.position);
+
+        while (Vector3.Distance(transform.position, scorePosition) > 0.1f)
+        {
+            transform.position = Vector3.Lerp(capturedPosition, scorePosition, (Time.time - capturedTime) / 0.3f);
+            yield return null;
+        }
+
+        StartCoroutine(Disappear());
     }
 }

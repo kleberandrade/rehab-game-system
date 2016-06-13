@@ -7,24 +7,27 @@ public class TextHint : MonoBehaviour
 {
     private Text m_Text;
     private FadeInOut m_Fade;
+    private AudioSource m_AudioSource;
 
     private void Awake()
     {
         m_Text = GetComponentInChildren<Text>();
         m_Fade = GetComponent<FadeInOut>();
+        m_AudioSource = GetComponent<AudioSource>();
     }
 
     public void Pulse(string text, float hideTime)
     {
+        StartCoroutine(Writing(text, hideTime, 0.0f));
         StartCoroutine(Pulsing(text, hideTime));
     }
 
     private IEnumerator Pulsing(string text, float hideTime)
     {
-        m_Text.text = text;
         yield return StartCoroutine(m_Fade.Fading(true, 1.0f, 0.0f));
         yield return new WaitForSeconds(hideTime);
         yield return StartCoroutine(m_Fade.Fading(false, 1.0f, 0.0f));
+        m_Text.text = string.Empty;
     }
 
     public void Show(string text, float time, float delay)
@@ -56,5 +59,18 @@ public class TextHint : MonoBehaviour
     public void Hide(float time, float delay)
     {
         m_Fade.Fade(false, time, delay);
+    }
+
+    public IEnumerator Writing(string text, float time, float delay) 
+    {
+        yield return new WaitForSeconds(delay + 0.1f * time);
+        float timeToLetter = (time * 0.7f) / (float)text.Length;
+        for (int index = 0; index < text.Length; index++) {
+            m_Text.text = text.Substring(0, index);
+            if (!text[index].Equals(" "))
+                m_AudioSource.Play();
+
+            yield return new WaitForSeconds(timeToLetter);
+        }
     }
 }

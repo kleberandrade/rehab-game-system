@@ -34,7 +34,6 @@ public class Spawner : MonoBehaviour
         m_Transform.position = myPosition;
 
         m_Height = Mathf.Abs(m_Transform.position.y - m_MoveBox.m_Player.position.y);
-        //m_Height = Mathf.Abs(GameManager.Parameters.Top - GameManager.Parameters.Bottom);
     }
 
     public void Spawn()
@@ -71,8 +70,6 @@ public class Spawner : MonoBehaviour
         go.SetActive(true);
 
         m_CurrentTargetPosition = new Vector3(position.x, m_MoveBox.m_Player.position.y + 1.0f, position.z);
-        //Debug.Log(string.Format("[Target] final position at {0}", m_CurrentTargetPosition.ToString()));
-
         m_MoveBox.Execute(m_CurrentTargetPosition, (m_Height - 0.8f) / speed);
     }
 
@@ -86,7 +83,6 @@ public class Spawner : MonoBehaviour
 
         float speed = (m_Height * GameManager.Parameters.MinSpeed) + task.Speed * (m_Height * GameManager.Parameters.MaxSpeed - m_Height * GameManager.Parameters.MinSpeed);
         m_TimeToFall = m_Height / speed;
-        //Debug.Log(string.Format("[ViewportAbsoluteSpawn] Time to fall: {0} segundos", m_TimeToFall));
         StartCoroutine(SpawningAtPosition(myPosition, speed));
     }
 
@@ -118,7 +114,6 @@ public class Spawner : MonoBehaviour
         // Define a velocidade do alvo
         float speed = (m_Height * GameManager.Parameters.MinSpeed) + task.Speed * (m_Height * GameManager.Parameters.MaxSpeed - m_Height * GameManager.Parameters.MinSpeed);
         m_TimeToFall = m_Height / speed;
-        //Debug.Log(string.Format("[ViewportRelativeSpawn] Time to fall: {0} segundos", m_TimeToFall));
 
         // Lança o alvo
         StartCoroutine(SpawningAtPosition(myPosition, speed));

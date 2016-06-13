@@ -188,7 +188,11 @@ public class RehabNetConnection : MonoBehaviour
     private void OnApplicationQuit()
     {
         m_RehabNetState = RehabNetState.Disconnecting;
-        Close();
+        if (m_ClientSocket != null)
+        {
+            m_ClientSocket.Close();
+            m_ClientSocket = null;
+        }
     }
 
     public void Home()
@@ -202,6 +206,4 @@ public class RehabNetConnection : MonoBehaviour
         m_RehabNetState = RehabNetState.Disconnecting;
         m_SendGamePackage.Control = (int)RehabNetGameControl.Disconnect;
     }
-
-
 }

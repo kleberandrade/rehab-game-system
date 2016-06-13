@@ -7,7 +7,8 @@ public enum StatsType
     Difficulty,
     Skill,
     Time,
-    RobotInit
+    RobotInit,
+    Amplitude
 }
 
 public class StatsManager : MonoBehaviour
@@ -73,5 +74,10 @@ public class StatsManager : MonoBehaviour
     public void SetRobotInit(string value, ArrowType type)
     {
         SetStats(value, type, StatsType.RobotInit);
+    }
+
+    public void SetAmplitude(string value, ArrowType type)
+    {
+        SetStats(value, type, StatsType.Amplitude);
     }
 }

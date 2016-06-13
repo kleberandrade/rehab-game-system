@@ -19,9 +19,27 @@ public class DynamicDifficulty : MonoBehaviour
 
     public void InitializeRandomTasks()
     {
-        //Debug.Log("GA: Initialize random population...");
+        Random.seed = (int)System.DateTime.Now.Ticks;
+
         for (int i = 0; i < m_NumberOfInitialTasks; i++)
             m_Tasks.Add(new Task(Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f)));
+    }
+
+    public void InitializeGridRandomTasks()
+    {
+        Random.seed = (int)System.DateTime.Now.Ticks;
+
+        for (int i = 0; i < 4; i++)
+        {
+            for (int j = 0; j < 5; j++)
+            {
+                Task task = new Task(Random.Range(0.0f + 0.25f * i, 0.0f + 0.25f * i + 0.25f),
+                                     Random.Range(0.0f + 0.2f * j, 0.0f + 0.2f * j + 0.2f));
+
+                m_Tasks.Add(task);
+            }
+        }
+            
     }
 
     public Task GetTask()
@@ -75,7 +93,7 @@ public class DynamicDifficulty : MonoBehaviour
     {
         m_Tasks[m_IndexOfTask].Error = error;
         m_Tasks[m_IndexOfTask].Time = time;
-        m_Difficulty = (m_Tasks[m_IndexOfTask].Distance + m_Tasks[m_IndexOfTask].Speed) / 2.0f;
+        m_Difficulty += (m_Tasks[m_IndexOfTask].Distance + m_Tasks[m_IndexOfTask].Speed) * 0.5f;
 
         m_IndexOfTask++;
 
@@ -85,6 +103,6 @@ public class DynamicDifficulty : MonoBehaviour
 
     public float Difficulty(int numberOfTargets)
     {
-        return 100.0f * m_Difficulty / numberOfTargets ;
+        return m_Difficulty / numberOfTargets;
     }
 }

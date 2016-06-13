@@ -17,6 +17,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &126630
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 464360}
+  - 96: {fileID: 9686616}
+  m_Layer: 0
+  m_Name: Trail
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &167044
 GameObject:
   m_ObjectHideFlags: 0
@@ -84,6 +100,19 @@ Transform:
   - {fileID: 478772}
   m_Father: {fileID: 467328}
   m_RootOrder: 0
+--- !u!4 &464360
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 126630}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.64, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 467328}
+  m_RootOrder: 1
 --- !u!4 &467328
 Transform:
   m_ObjectHideFlags: 1
@@ -91,11 +120,12 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 167044}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 470.6453, y: 52.61042, z: -398.52344}
+  m_LocalPosition: {x: -9.435722, y: 6.244234, z: -19.101562}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 437738}
+  - {fileID: 464360}
   m_Father: {fileID: 0}
   m_RootOrder: 0
 --- !u!4 &478772
@@ -297,6 +327,53 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!96 &9686616
+TrailRenderer:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 126630}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_Materials:
+  - {fileID: 2100000, guid: 8fda316a5cbafbc40b4574e4ef53a6a6, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 1
+  m_ReflectionProbeUsage: 1
+  m_ProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_Time: 2
+  m_StartWidth: 1
+  m_EndWidth: 1
+  m_Colors:
+    m_Color[0]:
+      serializedVersion: 2
+      rgba: 4278194733
+    m_Color[1]:
+      serializedVersion: 2
+      rgba: 4278213519
+    m_Color[2]:
+      serializedVersion: 2
+      rgba: 4278212722
+    m_Color[3]:
+      serializedVersion: 2
+      rgba: 4294967295
+    m_Color[4]:
+      serializedVersion: 2
+      rgba: 16777215
+  m_MinVertexDistance: 0.01
+  m_Autodestruct: 0
 --- !u!114 &11416292
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -308,10 +385,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 371e3a2b928e45c419409beb8c41f82e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_CollidedGroundAudioClip: {fileID: 8300000, guid: 15fb890dff903d542a76c60d110753ff,
-    type: 3}
-  m_CollidedPlayerAudioClip: {fileID: 8300000, guid: a61213a2e6fc387469f3963034b5c7c8,
-    type: 3}
+  m_GroundAudioClip: {fileID: 8300000, guid: 15fb890dff903d542a76c60d110753ff, type: 3}
+  m_CapturedAudioClip: {fileID: 8300000, guid: a320d99bf721abc42bc599604a1ee9d1, type: 3}
   m_Speed: 3
 --- !u!135 &13535262
 SphereCollider:

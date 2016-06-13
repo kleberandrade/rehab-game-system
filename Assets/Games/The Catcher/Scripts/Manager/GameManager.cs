@@ -14,7 +14,6 @@ public class GameManager : MonoBehaviour
     public string m_PlayMessage = string.Empty;
     public Task[] m_CalibrateTasks;
 
-    private GameState m_GameState = GameState.Calibrating;
     private Score m_Score;
     private Spawner m_Spawner;
     private Gameover m_Gameover;
@@ -64,7 +63,6 @@ public class GameManager : MonoBehaviour
 
         m_StartWait = new WaitForSeconds(m_StartDelay);
         m_EndWait = new WaitForSeconds(m_EndDelay);
-
         SetupGlobalParameters();
 
         StartCoroutine(GameLoop());
@@ -76,7 +74,7 @@ public class GameManager : MonoBehaviour
         Parameters.LeftScreen = m_Padding;
         Parameters.RightScreen = 1.0f - m_Padding;
         Parameters.DepthScreen = Helper.CameraDepht(m_Player.position);
-        Parameters.MaxDistance = 0.5f;
+        Parameters.MaxDistance = 0.45f;
         Parameters.MinDistance = 0.1f;
         Parameters.MaxSpeed = 1.0f;
         Parameters.MinSpeed = 0.1f;
@@ -105,7 +103,7 @@ public class GameManager : MonoBehaviour
     #region [ Starting ]
     private IEnumerator Starting()
     {
-        m_Score.SetNumberOfTargets(m_NumberOfTargets);
+        m_Score.SetNumberOfTargets(m_NumberOfTargets + m_CalibrateTasks.Length);
         m_StartTime = Time.time;
         m_TextHint.Pulse(m_StartMessage, m_StartDelay - 2);
         yield return m_StartWait;
@@ -119,6 +117,8 @@ public class GameManager : MonoBehaviour
 
         for (int i = 0; i < m_CalibrateTasks.Length; i++)
         {
+            yield return new WaitForSeconds(m_MoveBox.m_BackTime);
+
             float height = Mathf.Abs(GameManager.Parameters.Top - GameManager.Parameters.Bottom);
             float speed = (height * GameManager.Parameters.MinSpeed) + m_CalibrateTasks[i].Speed * (height * GameManager.Parameters.MaxSpeed);
             m_TextHint.Pulse(m_CalibrateMessages[i], height / speed * 0.6f);
@@ -130,14 +130,13 @@ public class GameManager : MonoBehaviour
         }
 
         m_Robot.State = PlayerState.Playing;
-        m_GameState = GameState.Playing;
     }
     #endregion
 
     private IEnumerator Playing()
     {
         m_TextHint.Pulse(m_PlayMessage, 5);
-        m_TaskManager.InitializeRandomTasks();
+        m_TaskManager.InitializeGridRandomTasks();
         do
         {
             yield return new WaitForSeconds(m_MoveBox.m_BackTime);
@@ -150,16 +149,13 @@ public class GameManager : MonoBehaviour
             while (m_TargetInGame)
             {
                 if (Mathf.Abs(m_PlayerMovement.Speed) > 1.0f)
-                {
-                    Debug.Log(string.Format("Player in movement at {0} pixels/seconds", m_PlayerMovement.Speed));
                     userTime += Time.deltaTime;
-                }
 
                 yield return null;
             }
 
 
-            Debug.Log(string.Format("User time is {0} seconds", userTime));
+           // Debug.Log(string.Format("User time is {0} seconds", userTime));
             float error;
             if (m_CapturedTarget)
             {
@@ -182,8 +178,8 @@ public class GameManager : MonoBehaviour
     {
         m_EndTime = Time.time;
 
-        float score = 100.0f * m_Score.Point / m_Score.Targets;
-        m_StatsManager.SetScore(string.Format("{0:0.00}", score), ArrowType.Up);
+        float score = m_Score.Point / (m_Score.Targets + m_CalibrateTasks.Length);
+        m_StatsManager.SetScore(string.Format("{0:0.00}", score * 100.0f), ArrowType.Up);
 
         float time = m_EndTime - m_StartTime;
         m_StatsManager.SetTime(string.Format("{0:0}", time), ArrowType.Up);
@@ -191,10 +187,13 @@ public class GameManager : MonoBehaviour
         float difficulty = m_TaskManager.Difficulty(m_NumberOfTargets);
         m_StatsManager.SetDifficulty(string.Format("{0:0.00}", difficulty), ArrowType.Up);
 
-        float flow = difficulty / score * 100.0f;
+        m_StatsManager.SetRobotInit(string.Format("{0:0.00}", m_MoveBox.m_HelperTime / time * 100.0f), ArrowType.Up);
+
+        float flow = Helper.Point2Line(score, difficulty, -1.0f, 1.0f, 0.0f);
         m_StatsManager.SetSkill(string.Format("{0:0.00}", flow), ArrowType.Up);
-        
-        //m_StatsManager.SetRobotInit(m_TaskManager.RobotInit, ArrowType.Up);
+
+        m_StatsManager.SetAmplitude(string.Format("{0:0}|{1:0}", Mathf.Abs(m_Robot.m_LeftPlayerAngle), m_Robot.m_RightPlayerAngle), ArrowType.Up);
+
         m_Gameover.Show();
         SessionManager.Instance.SaveSession();
         yield return m_EndWait;
@@ -210,9 +209,6 @@ public class GameManager : MonoBehaviour
     {
         m_CapturedTarget = captured;
         m_TargetInGame = false;
-
-        if (m_GameState == GameState.Calibrating)
-            return;
 
         m_Score.NextTarget();
         if (captured)
@@ -247,10 +243,4 @@ public struct GameParameters
 
     public float MinDistance;
     public float MaxDistance;
-}
-
-public enum GameState
-{
-    Calibrating,
-    Playing
 }
