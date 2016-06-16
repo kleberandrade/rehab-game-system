@@ -63,13 +63,11 @@ public class TextHint : MonoBehaviour
 
     public IEnumerator Writing(string text, float time, float delay) 
     {
-        yield return new WaitForSeconds(delay + 0.1f * time);
-        float timeToLetter = (time * 0.7f) / (float)text.Length;
+        yield return new WaitForSeconds(delay + 0.05f * time);
+        float timeToLetter = m_AudioSource.clip.length / (float)text.Length;
+        m_AudioSource.Play();
         for (int index = 0; index < text.Length; index++) {
             m_Text.text = text.Substring(0, index);
-            if (!text[index].Equals(" "))
-                m_AudioSource.Play();
-
             yield return new WaitForSeconds(timeToLetter);
         }
     }

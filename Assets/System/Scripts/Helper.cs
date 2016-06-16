@@ -97,4 +97,15 @@ public class Helper
     {
         return Mathf.Abs(a * x + b * y + c) / Mathf.Sqrt(Mathf.Pow(a,2) + Mathf.Pow(b,2));
     }
+
+    public static float JLerp(float from, float to, float time)
+    {
+        if (time < 0.0f)
+            return from;
+
+        if (time > 1.0f)
+            return to;
+
+        return Mathf.Abs(to - from) * (10.0f * Mathf.Pow(time, 3) - 15.0f * Mathf.Pow(time, 4) + 16.0f * Mathf.Pow(time, 5));
+    }
 }

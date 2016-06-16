@@ -14,7 +14,7 @@ public class MoveBox : MonoBehaviour
     [HideInInspector] public float m_Delay;
     
     private float m_StartTime;
-    private MoveBoxState m_State = MoveBoxState.None;
+    public MoveBoxState m_State = MoveBoxState.None;
 
     public Vector2 m_Padding = Vector2.right;
     private float m_Depth;
@@ -82,10 +82,16 @@ public class MoveBox : MonoBehaviour
         {
             m_ElapsedTime = (Time.time - m_StartTime) / m_GoTime;
 
-            m_CurrentLeft = Mathf.Lerp(m_Min.x, m_Target.x, m_ElapsedTime);
-            m_CurrentRight = Mathf.Lerp(m_Max.x, m_Target.x, m_ElapsedTime);
-            m_CurrentBottom = Mathf.Lerp(m_Min.y, m_Target.y, m_ElapsedTime);
-            m_CurrentTop = Mathf.Lerp(m_Max.y, m_Target.y, m_ElapsedTime);
+            //m_CurrentLeft = Mathf.Lerp(m_Min.x, m_Target.x, m_ElapsedTime);
+            //m_CurrentRight = Mathf.Lerp(m_Max.x, m_Target.x, m_ElapsedTime);
+            //m_CurrentBottom = Mathf.Lerp(m_Min.y, m_Target.y, m_ElapsedTime);
+            //m_CurrentTop = Mathf.Lerp(m_Max.y, m_Target.y, m_ElapsedTime);
+
+
+            m_CurrentLeft = Helper.JLerp(m_Min.x, m_Target.x, m_ElapsedTime);
+            m_CurrentRight = Helper.JLerp(m_Max.x, m_Target.x, m_ElapsedTime);
+            m_CurrentBottom = Helper.JLerp(m_Min.y, m_Target.y, m_ElapsedTime);
+            m_CurrentTop = Helper.JLerp(m_Max.y, m_Target.y, m_ElapsedTime);
         }
         else
         {

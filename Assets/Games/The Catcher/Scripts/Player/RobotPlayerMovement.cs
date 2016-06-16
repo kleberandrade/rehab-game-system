@@ -15,6 +15,7 @@ public class RobotPlayerMovement : MonoBehaviour
     private float m_Horizontal;
     private bool m_Pause = false;
     private bool m_Error = false;
+    public float m_SpeedDebug = 80.0f;
 
     private void Start ()
     {
@@ -94,6 +95,12 @@ public class RobotPlayerMovement : MonoBehaviour
             m_RobotAngle = RehabNetManager.Instance.Connection.RobotPackage.Position;
             m_RobotAngle *= -1.0f;
         }
+        else
+        {
+#if UNITY_EDITOR
+            m_RobotAngle += Input.GetAxis("Horizontal") * m_SpeedDebug * Time.deltaTime;
+#endif
+        }
 
         if (m_State == PlayerState.Calibration || m_State == PlayerState.Playing)
         {
@@ -102,6 +109,8 @@ public class RobotPlayerMovement : MonoBehaviour
 
             if (m_RobotAngle > m_RightPlayerAngle)
                 m_RightPlayerAngle = (float)m_RobotAngle;
+
+            SessionManager.Instance.AddPerformance("Position", m_RobotAngle);
         }
 
         if (m_State == PlayerState.Playing)
@@ -115,9 +124,7 @@ public class RobotPlayerMovement : MonoBehaviour
             GameManager.Parameters.DepthScreen);
 
         m_PlayerMovement.HorizontalMovement(m_Horizontal);
-
-
-	}
+    }
 
     public PlayerState State
     {

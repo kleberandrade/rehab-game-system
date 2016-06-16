@@ -18,6 +18,7 @@ public class Nut : MonoBehaviour
     private Vector3 m_Size;
     private Score m_Score;
     private TrailRenderer m_Trail;
+    public ParticleSystem m_Particles;
 
     private bool m_IsFalling = true;
 
@@ -67,6 +68,7 @@ public class Nut : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Ground"))
         {
+
             m_Trail.Reset(this);
 
             m_Collider.enabled = false;
@@ -78,6 +80,10 @@ public class Nut : MonoBehaviour
             
             m_Rigidbody.constraints = RigidbodyConstraints.FreezeAll;
             m_Animator.SetBool("InGround", true);
+
+            ParticleSystem ps = (ParticleSystem)Instantiate(m_Particles, m_Transform.position, Quaternion.identity);
+            ps.Play();
+            Destroy(ps.gameObject, ps.duration * 2.0f);
 
             StartCoroutine(Destroy());
         }

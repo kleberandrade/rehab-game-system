@@ -11,6 +11,7 @@ public class Score : MonoBehaviour
     private int m_Point;
     private int m_NumberOfTargets;
     private RectTransform m_RectTransform;
+    private AudioSource m_AudioSource;
 
     public int Point
     {
@@ -28,6 +29,7 @@ public class Score : MonoBehaviour
         m_Slider = GetComponent<Slider>();
         m_Text = GetComponentInChildren<Text>();
         m_Fade = GetComponentInChildren<FadeInOut>();
+        m_AudioSource = GetComponent<AudioSource>();
     }
 
     public void SetNumberOfTargets(int numberOfTargets)
@@ -47,9 +49,16 @@ public class Score : MonoBehaviour
             return;
 
         m_Point++;
+        
         StartCoroutine(m_Fade.PulseInverse(0.2f));
-
+        StartCoroutine(PlayAudio(0.2f));
         SetHealthUI();
+    }
+
+    public IEnumerator PlayAudio(float time)
+    {
+        yield return new WaitForSeconds(time);
+        m_AudioSource.Play();
     }
 
     public void NextTarget()

@@ -15,8 +15,10 @@ public class SelectGame : MonoBehaviour
 	}
 	
 	private void Select ()
-    {/*
-	    if (!RehabNetManager.Instance.Connection.IsConnected)
+    {
+
+#if !UNITY_EDITOR
+        if (!RehabNetManager.Instance.Connection.IsConnected)
         {
             SystemDialogBox.Instance.Show(
                 "Erro de conexão",
@@ -37,7 +39,8 @@ public class SelectGame : MonoBehaviour
 
             return;
         }
-        */
+#endif
+
         ToPlay();
     }
 
@@ -48,7 +51,6 @@ public class SelectGame : MonoBehaviour
         SessionManager.Instance.NewPerformance();
         SessionManager.Instance.NewTasks();
         SessionManager.Instance.NewSession();
-
         LoadingScreenManager.LoadScene(m_SceneNumber);
     }
 }

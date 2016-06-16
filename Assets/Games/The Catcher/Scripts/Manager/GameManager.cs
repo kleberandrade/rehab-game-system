@@ -55,9 +55,9 @@ public class GameManager : MonoBehaviour
         m_Spawner = FindObjectOfType<Spawner>();
 
         if (m_DebugMode || !PlayerPrefs.HasKey("NumberOfGoal"))
-            m_NumberOfTargets = m_DebugNumberOfTargets;
+            m_NumberOfTargets = m_DebugNumberOfTargets + m_CalibrateTasks.Length;
         else
-            m_NumberOfTargets = PlayerPrefs.GetInt("NumberOfGoal");
+            m_NumberOfTargets = PlayerPrefs.GetInt("NumberOfGoal") + m_CalibrateTasks.Length;
 
         Debug.Log(string.Format("Game with {0} targets.", m_NumberOfTargets));
 
@@ -103,7 +103,7 @@ public class GameManager : MonoBehaviour
     #region [ Starting ]
     private IEnumerator Starting()
     {
-        m_Score.SetNumberOfTargets(m_NumberOfTargets + m_CalibrateTasks.Length);
+        m_Score.SetNumberOfTargets(m_NumberOfTargets);
         m_StartTime = Time.time;
         m_TextHint.Pulse(m_StartMessage, m_StartDelay - 2);
         yield return m_StartWait;
@@ -143,6 +143,7 @@ public class GameManager : MonoBehaviour
 
             Task task = m_TaskManager.GetTask();
             m_Spawner.ViewportRelativeSpawn(task, m_Player.position);
+            yield return new WaitForSeconds(m_Spawner.m_TimeToSpawning);
             m_TargetInGame = true;
 
             float userTime = 0.0f;
@@ -154,8 +155,6 @@ public class GameManager : MonoBehaviour
                 yield return null;
             }
 
-
-           // Debug.Log(string.Format("User time is {0} seconds", userTime));
             float error;
             if (m_CapturedTarget)
             {
@@ -178,21 +177,21 @@ public class GameManager : MonoBehaviour
     {
         m_EndTime = Time.time;
 
-        float score = m_Score.Point / (m_Score.Targets + m_CalibrateTasks.Length);
-        m_StatsManager.SetScore(string.Format("{0:0.00}", score * 100.0f), ArrowType.Up);
+        float score = m_Score.Point / (float)m_Score.Targets;
+        m_StatsManager.SetScore(string.Format("{0:0.0}", score * 100.0f), ArrowType.Up);
 
         float time = m_EndTime - m_StartTime;
         m_StatsManager.SetTime(string.Format("{0:0}", time), ArrowType.Up);
 
         float difficulty = m_TaskManager.Difficulty(m_NumberOfTargets);
-        m_StatsManager.SetDifficulty(string.Format("{0:0.00}", difficulty), ArrowType.Up);
+        m_StatsManager.SetDifficulty(string.Format("{0:0.0}", difficulty), ArrowType.Up);
 
-        m_StatsManager.SetRobotInit(string.Format("{0:0.00}", m_MoveBox.m_HelperTime / time * 100.0f), ArrowType.Up);
+        m_StatsManager.SetRobotInit(string.Format("{0:0.0}", m_MoveBox.m_HelperTime / time * 100.0f), ArrowType.Up);
 
         float flow = Helper.Point2Line(score, difficulty, -1.0f, 1.0f, 0.0f);
-        m_StatsManager.SetSkill(string.Format("{0:0.00}", flow), ArrowType.Up);
+        m_StatsManager.SetSkill(string.Format("{0:0.0}", flow), ArrowType.Up);
 
-        m_StatsManager.SetAmplitude(string.Format("{0:0}|{1:0}", Mathf.Abs(m_Robot.m_LeftPlayerAngle), m_Robot.m_RightPlayerAngle), ArrowType.Up);
+        m_StatsManager.SetAmplitude(string.Format("{0:0} | {1:0}", Mathf.Abs(m_Robot.m_LeftPlayerAngle), m_Robot.m_RightPlayerAngle), ArrowType.Up);
 
         m_Gameover.Show();
         SessionManager.Instance.SaveSession();

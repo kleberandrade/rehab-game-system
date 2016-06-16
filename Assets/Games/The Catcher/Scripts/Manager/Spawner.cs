@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-    private float m_TimeToSpawning = 0.5f;
+    public float m_TimeToSpawning = 0.5f;
     private ObjectPooler m_ObjectPooler;
     private ParticleSystem m_Particles;
     private Transform m_Transform;
